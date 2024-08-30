@@ -9,27 +9,27 @@ import (
 )
 
 type IUserService interface {
-	CreateAccount(CreateAccountReq) (*models.User, error)
+	CreateAccount(username, password string) (*models.User, error)
 	GetById(id uuid.UUID) (*models.User, error)
 	GetAll() ([]models.User, error)
-}
-
-type CreateAccountReq struct {
-	Username string
 }
 
 type UserService struct {
 	userRepository ports.UserRepository
 }
 
-func (s *UserService) CreateAccount(req CreateAccountReq) (*models.User, error) {
-	user := models.NewUser(req.Username)
+func (s *UserService) CreateAccount(username, password string) (*models.User, error) {
+	user, err := models.NewUser(username, password)
+
+	if err != nil {
+		return nil, err
+	}
 
 	if err := s.userRepository.Add(user); err != nil {
 		return nil, fmt.Errorf("failed to add a user: %w", err)
 	}
 
-	return &user, nil
+	return user, nil
 }
 
 func (s *UserService) GetById(id uuid.UUID) (*models.User, error) {

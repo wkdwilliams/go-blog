@@ -1,23 +1,44 @@
 package views
 
 import (
-	"github.com/wkdwilliams/go-blog/internal/adapters/primary/web/views/components"
 	"github.com/wkdwilliams/go-blog/internal/domain/models"
+	"github.com/wkdwilliams/go-blog/internal/adapters/primary/web/views/components"
 )
 
-templ Index(posts *[]models.Post) {
-	<!DOCTYPE html>
-	<html lang="en">
-		@components.Head()
-		<body>
-			@components.Header()
-				for _, v := range *posts {
-					<section class="blog-posts">
-						<h3>{v.Title}</h3>
-						<p>{v.Content}</p>
-						
-					</section>
-				}
-		</body>
-	</html>
+templ Index(posts []models.Post) {
+<!DOCTYPE html>
+<html lang="en">
+
+@components.Head()
+
+<body>
+    <!-- Navbar -->
+	@components.Navigation()
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1>Welcome to My Dev Blog</h1>
+            <p>This blog was coded entirely in <b>Golang</b></p>
+        </div>
+    </section>
+
+    <!-- Blog Posts Section -->
+    <div class="container my-5">
+        <div class="row">
+			for _, v := range posts {
+				<div class="col-md-6 blog-post">
+                	<h2>{v.Title}</h2>
+                	<p class="blog-post-meta">{v.CreatedAt.Format("January 2, 2006")} by <a href="#">{v.User.Username}</a></p>
+					@templ.Raw(v.Content)
+            	</div>
+			}
+        </div>
+    </div>
+
+    @components.Footer()
+</body>
+
+</html>
+
 }

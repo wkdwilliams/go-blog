@@ -24,7 +24,6 @@ func IndexHandler(postService services.IPostService) echo.HandlerFunc {
 		}
 
 		fmt.Println(sess.Values["foo"])
-
 		a := views.Index(posts)
 		return a.Render(c.Request().Context(), c.Response().Writer)
 	}

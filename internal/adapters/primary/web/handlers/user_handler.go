@@ -9,13 +9,14 @@ func CreateAccount(userService services.IUserService) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var input struct {
 			Username string `json:"username"`
+			Password string `json:"password"`
 		}
 
 		if err := c.Bind(&input); err != nil {
 			return c.String(400, "")
 		}
 
-		resp, err := userService.CreateAccount(services.CreateAccountReq(input))
+		resp, err := userService.CreateAccount(input.Username, input.Password)
 		if err != nil {
 			return c.String(500, "")
 		}

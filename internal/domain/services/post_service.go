@@ -9,7 +9,7 @@ import (
 type IPostService interface {
 	Create(title, content string, userId uuid.UUID) (*models.Post, error)
 	GetById(id uuid.UUID) (*models.Post, error)
-	GetAll() (*[]models.Post, error)
+	GetAll() ([]models.Post, error)
 }
 
 type PostService struct {
@@ -34,6 +34,6 @@ func (s *PostService) GetById(id uuid.UUID) (*models.Post, error) {
 	return s.postRepository.GetById(id)
 }
 
-func (s *PostService) GetAll() (*[]models.Post, error) {
+func (s *PostService) GetAll() ([]models.Post, error) {
 	return s.postRepository.GetAll()
 }

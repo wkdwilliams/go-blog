@@ -21,19 +21,19 @@ func (ur *PostRepository) Add(u models.Post) error {
 func (ur *PostRepository) GetById(id uuid.UUID) (*models.Post, error) {
 	post := &models.Post{}
 
-	if err := ur.db.First(post, id).Error; err != nil {
+	if err := ur.db.Preload("User").First(post, id).Error; err != nil {
 		return nil, err
 	}
 
 	return post, nil
 }
 
-func (ur *PostRepository) GetAll() (*[]models.Post, error) {
+func (ur *PostRepository) GetAll() ([]models.Post, error) {
 	post := []models.Post{}
 
-	if err := ur.db.Find(&post).Error; err != nil {
-		return nil, err
+	if err := ur.db.Preload("User").Find(&post).Error; err != nil {
+		return post, err
 	}
 
-	return &post, nil
+	return post, nil
 }

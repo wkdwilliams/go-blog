@@ -26,3 +26,6 @@ migrate-up:
 
 migrate-down:
 	go run cmd/migrate/main.go -command down
+
+seed:
+	go run cmd/seed/main.go

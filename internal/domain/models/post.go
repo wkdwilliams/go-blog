@@ -9,12 +9,12 @@ import (
 type Post struct {
 	ID        uuid.UUID `gorm:"type:VARCHAR(36);primary_key;"`
 	UserID    uuid.UUID `gorm:"type:VARCHAR(36);"`
-	Title     string
+	Title     string    `gorm:"type:VARCHAR(50);"`
 	Content   string
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt *time.Time
-	// User      User
+	User      User
 }
 
 func NewPost(title, content string, userId uuid.UUID) Post {

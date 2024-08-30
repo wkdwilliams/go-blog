@@ -8,7 +8,11 @@ import (
 )
 
 func TestCreateUser(t *testing.T) {
-	user := models.NewUser("lewis")
+	user, err := models.NewUser("lewis", "pass")
+
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	if uuid, err := uuid.Parse(user.ID.String()); err != nil {
 		t.Fatalf("uuid: %s is not valid", uuid.String())

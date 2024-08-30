@@ -8,5 +8,5 @@ import (
 type PostRepository interface {
 	Add(u models.Post) error
 	GetById(id uuid.UUID) (*models.Post, error)
-	GetAll() (*[]models.Post, error)
+	GetAll() ([]models.Post, error)
 }
