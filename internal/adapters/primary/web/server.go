@@ -1,23 +1,26 @@
 package web
 
 import (
+	"context"
 	"fmt"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/samverrall/hex-structure/internal/core/services/users"
+	"github.com/labstack/echo/v4"
+	"github.com/wkdwilliams/go-blog/internal/domain/services"
 )
 
 type App struct {
-	fiber   *fiber.App
-	userAPI users.IUserService
-	port    int
+	echo        *echo.Echo
+	UserService services.IUserService
+	PostService services.IPostService
+	port        int
 }
 
-func NewApp(userAPI users.IUserService, opts ...AppOption) *App {
+func NewApp(userService services.IUserService, postService services.IPostService, opts ...AppOption) *App {
 	s := &App{
-		fiber:   fiber.New(),
-		userAPI: userAPI,
-		port:    8000,
+		echo:        echo.New(),
+		UserService: userService,
+		PostService: postService,
+		port:        8000,
 	}
 
 	for _, applyOption := range opts {
@@ -29,6 +32,10 @@ func NewApp(userAPI users.IUserService, opts ...AppOption) *App {
 	return s
 }
 
-func (a *App) Run() error {
-	return a.fiber.Listen(fmt.Sprintf(":%d", a.port))
+func (a App) Start() error {
+	return a.echo.Start(fmt.Sprintf(":%d", a.port))
+}
+
+func (a App) Stop(ctx context.Context) error {
+	return a.echo.Shutdown(ctx)
 }

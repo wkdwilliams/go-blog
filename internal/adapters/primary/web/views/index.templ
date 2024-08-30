@@ -1,0 +1,23 @@
+package views
+
+import (
+	"github.com/wkdwilliams/go-blog/internal/adapters/primary/web/views/components"
+	"github.com/wkdwilliams/go-blog/internal/domain/models"
+)
+
+templ Index(posts *[]models.Post) {
+	<!DOCTYPE html>
+	<html lang="en">
+		@components.Head()
+		<body>
+			@components.Header()
+				for _, v := range *posts {
+					<section class="blog-posts">
+						<h3>{v.Title}</h3>
+						<p>{v.Content}</p>
+						
+					</section>
+				}
+		</body>
+	</html>
+}
