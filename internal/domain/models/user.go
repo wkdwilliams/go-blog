@@ -8,7 +8,7 @@ import (
 )
 
 type User struct {
-	ID        uuid.UUID `gorm:"type:VARCHAR(36);primary_key;"`
+	ID        uuid.UUID `gorm:"type:VARCHAR(16);primary_key;"`
 	Username  string    `gorm:"index,unique"`
 	Password  string
 	CreatedAt time.Time

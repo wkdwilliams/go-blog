@@ -29,3 +29,6 @@ migrate-down:
 
 seed:
 	go run cmd/seed/main.go
+
+test:
+	go test ./... -race -count 1

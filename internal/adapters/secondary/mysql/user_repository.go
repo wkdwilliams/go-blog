@@ -21,7 +21,9 @@ func (ur *UserRepository) Add(u *models.User) error {
 func (ur *UserRepository) GetById(id uuid.UUID) (*models.User, error) {
 	user := &models.User{}
 
-	ur.db.First(user, id)
+	if err := ur.db.First(user, id).Error; err != nil {
+		return nil, err
+	}
 
 	return user, nil
 }
@@ -31,6 +33,16 @@ func (ur *UserRepository) GetAll() ([]models.User, error) {
 
 	if err := ur.db.Find(&user).Error; err != nil {
 		return user, err
+	}
+
+	return user, nil
+}
+
+func (ur *UserRepository) GetByUsername(username string) (*models.User, error) {
+	user := &models.User{}
+
+	if err := ur.db.First(user, "username = ?", username).Error; err != nil {
+		return nil, err
 	}
 
 	return user, nil
