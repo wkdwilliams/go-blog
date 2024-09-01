@@ -31,7 +31,7 @@ func (ur *PostRepository) GetById(id uuid.UUID) (*models.Post, error) {
 func (ur *PostRepository) GetAll() ([]models.Post, error) {
 	post := []models.Post{}
 
-	if err := ur.db.Preload("User").Find(&post).Error; err != nil {
+	if err := ur.db.Order("created_at DESC").Preload("User").Find(&post).Error; err != nil {
 		return post, err
 	}
 

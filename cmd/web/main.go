@@ -60,4 +60,10 @@ func main() {
 	if err := srv.Stop(context.Background()); err != nil {
 		log.Fatal(err)
 	}
+
+	d, err := db.DB()
+	if err != nil {
+		log.Fatal(err)
+	}
+	d.Close()
 }

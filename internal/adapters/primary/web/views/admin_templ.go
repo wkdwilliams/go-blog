@@ -8,8 +8,6 @@ package views
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "github.com/wkdwilliams/go-blog/internal/adapters/primary/web/views/components"
-
 func postCreatedText() templ.CSSClass {
 	templ_7745c5c3_CSSBuilder := templruntime.GetBuilder()
 	templ_7745c5c3_CSSBuilder.WriteString(`margin-top:30px;`)
@@ -40,22 +38,6 @@ func Admin(postCreated bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!doctype html><html lang=\"en\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = components.Head().Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<body>")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = components.Navigation().Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"form-container\"><h1>Create a New Blog Post</h1><form action=\"/admin/post\" method=\"POST\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -84,7 +66,7 @@ func Admin(postCreated bool) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"form-group\"><label for=\"title\">Post Title</label> <input type=\"text\" id=\"title\" name=\"title\" placeholder=\"Enter your blog post title\" required></div><div class=\"form-group\"><label for=\"content\">Post Content</label> <textarea id=\"content\" name=\"content\" placeholder=\"I just created some new cool code in JavaScript:\n&lt;pre&gt;&lt;code class=&#39;language-javascript&#39;&gt;\nconst a = 1;\n&lt;/code&gt;&lt;/pre&gt;\" required></textarea><p class=\"helper-text\">You can use HTML tags for formatting your content.</p></div><div class=\"form-group\"><button type=\"submit\">Publish Post</button></div></form></div></body></html>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"form-group\"><label for=\"title\">Post Title</label> <input type=\"text\" id=\"title\" name=\"title\" placeholder=\"Enter your blog post title\" required></div><div class=\"form-group\"><label for=\"content\">Post Content</label> <textarea id=\"content\" name=\"content\" placeholder=\"I just created some new cool code in JavaScript:\n&lt;pre&gt;&lt;code class=&#39;language-javascript&#39;&gt;\nconst a = 1;\n&lt;/code&gt;&lt;/pre&gt;\" required></textarea><p class=\"helper-text\">You can use HTML tags for formatting your content.</p></div><div class=\"form-group\"><button type=\"submit\">Publish Post</button></div></form></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -1,0 +1,34 @@
+package views
+
+css golangImg() {
+	width: 300px;
+}
+
+css center() {
+	width: 50%;
+	margin: 0 auto;
+	text-align: center;
+}
+
+var golangImage = "/static/img/golang.png"
+
+templ NotFound() {
+	<div class={"container my-5", center()}>
+		<img src={golangImage} class={golangImg()} />
+		<h2>Page Not Found</h2>
+	</div>
+}
+
+templ ServerError() {
+	<div class={"container my-5", center()}>
+		<img src={golangImage}class={golangImg()} />
+		<h2>Server Error</h2>
+	</div>
+}
+
+templ BadRequest() {
+	<div class={"container my-5", center()}>
+		<img src={golangImage}class={golangImg()} />
+		<h2>Bad Request</h2>
+	</div>
+}

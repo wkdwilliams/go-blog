@@ -2,9 +2,13 @@ package web
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
+	"github.com/google/uuid"
+	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
+	"github.com/wkdwilliams/go-blog/internal/domain/models"
 	"github.com/wkdwilliams/go-blog/internal/domain/services"
 )
 
@@ -23,6 +27,8 @@ func NewApp(userService services.IUserService, postService services.IPostService
 		port:        8000,
 	}
 
+	s.echo.HTTPErrorHandler = ErrorHandler
+
 	for _, applyOption := range opts {
 		applyOption(s)
 	}
@@ -30,6 +36,18 @@ func NewApp(userService services.IUserService, postService services.IPostService
 	s.initAppRoutes()
 
 	return s
+}
+
+func (a App) GetAuthenticatedUser(c echo.Context) (*models.User, error) {
+	sess, err := session.Get("goblog", c)
+	if err != nil {
+		return nil, err
+	}
+	if _, ok := sess.Values["user_id"]; !ok {
+		return nil, errors.New("not authenticated")
+	}
+
+	return a.UserService.GetById(sess.Values["user_id"].(uuid.UUID))
 }
 
 func (a App) Start() error {

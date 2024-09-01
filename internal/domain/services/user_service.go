@@ -11,7 +11,7 @@ import (
 )
 
 type IUserService interface {
-	CreateAccount(username, password string) (*models.User, error)
+	CreateAccount(username, password, name string) (*models.User, error)
 	GetById(id uuid.UUID) (*models.User, error)
 	GetAll() ([]models.User, error)
 	GetByUsername(username string) (*models.User, error)
@@ -22,8 +22,12 @@ type UserService struct {
 	userRepository ports.UserRepository
 }
 
-func (s *UserService) CreateAccount(username, password string) (*models.User, error) {
-	user, err := models.NewUser(username, password)
+func NewUserService(ur ports.UserRepository) *UserService {
+	return &UserService{ur}
+}
+
+func (s *UserService) CreateAccount(username, password, name string) (*models.User, error) {
+	user, err := models.NewUser(username, password, name)
 
 	if err != nil {
 		return nil, err
@@ -60,8 +64,4 @@ func (s *UserService) Authenticate(username, password string) (*models.User, err
 	}
 
 	return user, nil
-}
-
-func NewUserService(ur ports.UserRepository) *UserService {
-	return &UserService{ur}
 }

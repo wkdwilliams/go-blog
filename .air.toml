@@ -5,7 +5,7 @@ testdata_dir = "testdata"
 [build]
   args_bin = []
   bin = "./bin/main"
-  cmd = "make compile && lsof -i tcp:8000 | awk 'NR==2{print $2}' | xargs kill"
+  cmd = "make compile-dev && lsof -i tcp:8000 | awk 'NR==2{print $2}' | xargs kill"
   delay = 1000
   exclude_dir = ["assets", "tmp", "vendor", "testdata"]
   exclude_file = []

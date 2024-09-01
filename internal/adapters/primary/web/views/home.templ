@@ -1,0 +1,44 @@
+package views
+
+import "github.com/wkdwilliams/go-blog/internal/domain/models"
+
+templ Home(posts []models.Post) {
+	<!-- Hero Section -->
+	<section class="hero-section">
+		<div class="container">
+			<h1>Welcome to My Dev Blog</h1>
+			<span id="sub-desciption"></span>
+		</div>
+	</section>
+	<!-- Blog Posts Section -->
+	<div class="container my-5">
+		<div class="row">
+			for _, v := range posts {
+				<div class="col-md-6 blog-post">
+					<h2>{ v.Title }</h2>
+					<p class="blog-post-meta">{ v.CreatedAt.Format("January 2, 2006") } by <a href="#">{ v.User.Name }</a></p>
+					@templ.Raw(v.Content)
+				</div>
+			}
+		</div>
+	</div>
+	<script>
+		window.onload = function() {
+			const text = "This blog was coded entirely in <b>Golang</b>";
+
+			if(localStorage.getItem("loaded") != null){
+				document.getElementById("sub-desciption").innerHTML = text;
+				return;
+			}
+    		const typed = new Typed('#sub-desciption', {
+      			strings: [text],
+      			typeSpeed: 40,
+				onComplete: (self) => {
+					typed.destroy();
+					document.getElementById("sub-desciption").innerHTML = text;
+				},
+    		});
+			localStorage.setItem("loaded", 1)
+		};
+	</script>
+}

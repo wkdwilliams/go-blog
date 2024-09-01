@@ -8,7 +8,7 @@ import (
 )
 
 func TestCreateUser(t *testing.T) {
-	user, err := models.NewUser("lewis", "pass")
+	user, err := models.NewUser("admin", "pass", "lewis")
 
 	if err != nil {
 		t.Fatal(err)

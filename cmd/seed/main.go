@@ -26,7 +26,7 @@ func main() {
 	postRepo := mysql.NewPostRepository(db)
 	postService := services.NewPostService(postRepo)
 
-	user, err := usersService.CreateAccount("Lewis", "pass111111111")
+	user, err := usersService.CreateAccount("admin", "pass", "lewis")
 	if err != nil {
 		log.Fatal(err)
 	}

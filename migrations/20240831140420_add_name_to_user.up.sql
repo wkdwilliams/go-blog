@@ -1,0 +1,1 @@
+ALTER TABLE `users` ADD `name` VARCHAR(30) NOT NULL AFTER `password`;

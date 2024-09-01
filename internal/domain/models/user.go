@@ -11,12 +11,13 @@ type User struct {
 	ID        uuid.UUID `gorm:"type:VARCHAR(16);primary_key;"`
 	Username  string    `gorm:"index,unique"`
 	Password  string
+	Name      string
 	CreatedAt time.Time
 	UpdateAt  time.Time
 	Posts     []Post `gorm:"foreignKey:UserID"`
 }
 
-func NewUser(username, password string) (*User, error) {
+func NewUser(username, password, name string) (*User, error) {
 	hash, err := hashing.HashPassword(password)
 
 	if err != nil {
@@ -27,6 +28,7 @@ func NewUser(username, password string) (*User, error) {
 		ID:        uuid.New(),
 		Username:  username,
 		Password:  hash,
+		Name:      name,
 		CreatedAt: time.Now(),
 		UpdateAt:  time.Now(),
 	}, nil

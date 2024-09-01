@@ -11,13 +11,13 @@ import (
 
 func AdminIndexHandler() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		return views.Admin(false).Render(c.Request().Context(), c.Response().Writer)
+		return views.Main(views.Admin(false)).Render(c.Request().Context(), c.Response().Writer)
 	}
 }
 
 func AdminLoginHandler() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		return views.AdminLogin(false).Render(c.Request().Context(), c.Response().Writer)
+		return views.Main(views.AdminLogin(false)).Render(c.Request().Context(), c.Response().Writer)
 	}
 }
 
@@ -49,7 +49,7 @@ func AdminPostCreateHandler(postService services.IPostService) echo.HandlerFunc 
 			return err
 		}
 
-		return views.Admin(true).Render(c.Request().Context(), c.Response().Writer)
+		return views.Main(views.Admin(true)).Render(c.Request().Context(), c.Response().Writer)
 	}
 }
 
