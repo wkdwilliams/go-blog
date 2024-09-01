@@ -18,7 +18,7 @@ func TestCreateUser(t *testing.T) {
 		t.Fatalf("uuid: %s is not valid", uuid.String())
 	}
 
-	if user.Username != "lewis" {
+	if user.Username != "admin" {
 		t.Fatalf("username: %s is not valid", user.Username)
 	}
 }
