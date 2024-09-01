@@ -1,5 +1,6 @@
 services:
   app:
+    container_name: goblog-app
     build: .
     ports:
       - "${PORT}:${PORT}"
@@ -10,12 +11,12 @@ services:
       retries: 5
       start_period: 5s
     depends_on:
-      mysql:
-        condition: service_healthy
+      - migrate
     networks:
       - go-blog-network
 
   migrate:
+    container_name: goblog-mgirate
     image: migrate/migrate:v4.17.1
     command: [
       "-path", "migrations",
