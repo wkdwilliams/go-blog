@@ -25,6 +25,7 @@ services:
     volumes:
       - ./migrations:/migrations
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     networks:
       - go-blog-network
