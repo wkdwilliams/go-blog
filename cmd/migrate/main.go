@@ -4,8 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"os"
-	"time"
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/mysql"
@@ -27,10 +25,6 @@ func main() {
 	if err := godotenv.Load(); err != nil {
 		log.Fatal(err)
 	}
-
-	fmt.Println(os.Getenv("DB_HOST"))
-	fmt.Println(os.Getenv("DB_USER"))
-	fmt.Println(os.Getenv("DB_PASS"))
 
 	db, err := infrastructure.NewMysql()
 	if err != nil {
