@@ -6,10 +6,6 @@ run: compile
 
 compile:
 	mkdir -p bin
-	go build -o bin/main cmd/web/main.go
-
-compile-dev:
-	mkdir -p bin
 	@templ generate
 	go build -o bin/main cmd/web/main.go
 
