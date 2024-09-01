@@ -7,6 +7,21 @@ on:
     branches: [ "master" ]
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23.0'
+      - name: Install dependencies
+        run: go mod tidy
+      - name: Build
+        run: make compile
+      - name: Test with the Go CLI
+        run: make test
+
   deploy:
     runs-on: ubuntu-latest
     needs: test
