@@ -3,12 +3,12 @@ services:
     image: phpmyadmin/phpmyadmin:latest
     container_name: phpmyadmin
     environment:
-      PMA_HOST: mysql
+      PMA_HOST: goblog-mysql
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
     ports:
       - "8080:80"
     depends_on:
-      mysql:
+      goblog-mysql:
         condition: service_healthy
     networks:
       - go-blog-network
