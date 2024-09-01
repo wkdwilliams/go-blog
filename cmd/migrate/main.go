@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/mysql"
@@ -14,6 +15,7 @@ import (
 )
 
 func main() {
+	time.Sleep(10 * time.Second)
 	command := flag.String("command", "", "Migrate up or down")
 	flag.Parse()
 
