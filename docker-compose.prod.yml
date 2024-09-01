@@ -19,7 +19,7 @@ services:
     image: migrate/migrate:v4.17.1
     command: [
       "-path", "migrations",
-      "-database", "mysql://${DB_USER}:${DB_PASS}@tcp(mysql:3306)/${DB_NAME}",
+      "-database", "mysql://${DB_USER}:${DB_PASS}@tcp(${DB_HOST}:3306)/${DB_NAME}",
       "up"
     ]
     volumes:
