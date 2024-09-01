@@ -1,9 +1,13 @@
 name: CI/CD Pipeline
 
 on:
+  pull_request:
+    types: [closed]
+    branches: ["master"]
   push:
     branches: [ "master" ]
 
+jobs:
   test:
     runs-on: ubuntu-latest
     steps:
