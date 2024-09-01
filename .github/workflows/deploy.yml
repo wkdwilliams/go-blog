@@ -36,11 +36,11 @@ jobs:
 
     - name: Copy files to production server
       run: |
-        rsync -avz --exclude '.git*' -e "ssh -o StrictHostKeyChecking=no" ./ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/var/www/html/${{ secrets.PROJECT_PATH }}
+        rsync -avz --exclude '.git*' -e "ssh -o StrictHostKeyChecking=no" ./ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.PROJECT_PATH }}
 
     - name: Build and run Docker container on production
       run: |
         ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-          cd /var/www/html/${{ secrets.PROJECT_PATH }}
+          cd ${{ secrets.PROJECT_PATH }}
           docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build app migrate
         EOF
