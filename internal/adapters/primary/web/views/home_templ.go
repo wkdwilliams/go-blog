@@ -28,7 +28,7 @@ func Home(posts []models.Post) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!-- Hero Section --><section class=\"hero-section\"><div class=\"container\"><h1>Welcome to My Dev Blog</h1><span id=\"sub-desciption\"></span></div></section><!-- Blog Posts Section --><div class=\"container my-5\"><div class=\"row\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!-- Hero Section --><section class=\"hero-section\"><div class=\"container\"><h1>Welcome to My Dev Blog!!!</h1><span id=\"sub-desciption\"></span></div></section><!-- Blog Posts Section --><div class=\"container my-5\"><div class=\"row\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
