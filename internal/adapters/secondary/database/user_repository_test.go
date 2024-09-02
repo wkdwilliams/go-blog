@@ -6,7 +6,7 @@ import (
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/google/uuid"
-	"github.com/wkdwilliams/go-blog/internal/adapters/secondary/mysql"
+	"github.com/wkdwilliams/go-blog/internal/adapters/secondary/database"
 	"github.com/wkdwilliams/go-blog/internal/infrastructure"
 	"github.com/wkdwilliams/go-blog/pkg/hashing"
 )
