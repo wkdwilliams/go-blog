@@ -1,5 +1,7 @@
 package views
 
+import "github.com/wkdwilliams/go-blog/internal/adapters/primary/web/views/layout"
+
 css golangImg() {
 	width: 300px;
 }
@@ -13,22 +15,28 @@ css center() {
 var golangImage = "/static/img/golang.png"
 
 templ NotFound() {
-	<div class={"container my-5", center()}>
-		<img src={golangImage} class={golangImg()} />
-		<h2>Page Not Found</h2>
-	</div>
+	@layout.Base() {
+		<div class={ "container my-5", center() }>
+			<img src={ golangImage } class={ golangImg() }/>
+			<h2>Page Not Found</h2>
+		</div>
+	}
 }
 
 templ ServerError() {
-	<div class={"container my-5", center()}>
-		<img src={golangImage}class={golangImg()} />
-		<h2>Server Error</h2>
-	</div>
+	@layout.Base() {
+		<div class={ "container my-5", center() }>
+			<img src={ golangImage } class={ golangImg() }/>
+			<h2>Server Error</h2>
+		</div>
+	}
 }
 
 templ BadRequest() {
-	<div class={"container my-5", center()}>
-		<img src={golangImage}class={golangImg()} />
-		<h2>Bad Request</h2>
-	</div>
+	@layout.Base() {
+		<div class={ "container my-5", center() }>
+			<img src={ golangImage } class={ golangImg() }/>
+			<h2>Bad Request</h2>
+		</div>
+	}
 }

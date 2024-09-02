@@ -13,13 +13,11 @@ func ErrorHandler(err error, c echo.Context) {
 
 	if errors.Is(err, echo.ErrNotFound) {
 		view = views.NotFound()
-	}
-	if errors.Is(err, echo.ErrInternalServerError) {
+	} else if errors.Is(err, echo.ErrBadRequest) {
+		view = views.BadRequest()
+	} else {
 		view = views.ServerError()
 	}
-	if errors.Is(err, echo.ErrBadRequest) {
-		view = views.BadRequest()
-	}
 
-	views.Main(view).Render(c.Request().Context(), c.Response().Writer)
+	view.Render(c.Request().Context(), c.Response().Writer)
 }

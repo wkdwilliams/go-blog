@@ -14,6 +14,6 @@ func IndexHandler(postService services.IPostService) echo.HandlerFunc {
 			return err
 		}
 
-		return views.Main(views.Home(posts)).Render(c.Request().Context(), c.Response().Writer)
+		return views.Home(posts).Render(c.Request().Context(), c.Response().Writer)
 	}
 }

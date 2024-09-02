@@ -1,5 +1,7 @@
 package views
 
+import "github.com/wkdwilliams/go-blog/internal/adapters/primary/web/views/layout"
+
 css IncorrectLoginText() {
 	margin-top: 30px;
 	margin-bottom: 5px;
@@ -8,17 +10,19 @@ css IncorrectLoginText() {
 }
 
 templ AdminLogin(wrongLogin bool) {
-	<div class="login-container">
-		<h2>Login</h2>
-		<form action="/admin/login" method="POST">
-			<label for="username">Username</label>
-			<input type="text" id="username" name="username" placeholder="Enter your username" required/>
-			<label for="password">Password</label>
-			<input type="password" id="password" name="password" placeholder="Enter your password" required/>
-			<input type="submit" value="Login"/>
-		</form>
-		if wrongLogin {
-			<p class={ IncorrectLoginText() }>Wrong username or password</p>
-		}
-	</div>
+	@layout.Base() {
+		<div class="login-container">
+			<h2>Login</h2>
+			<form action="/admin/login" method="POST">
+				<label for="username">Username</label>
+				<input type="text" id="username" name="username" placeholder="Enter your username" required/>
+				<label for="password">Password</label>
+				<input type="password" id="password" name="password" placeholder="Enter your password" required/>
+				<input type="submit" value="Login"/>
+			</form>
+			if wrongLogin {
+				<p class={ IncorrectLoginText() }>Wrong username or password</p>
+			}
+		</div>
+	}
 }
