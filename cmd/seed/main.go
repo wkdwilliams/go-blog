@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/joho/godotenv"
-	"github.com/wkdwilliams/go-blog/internal/adapters/secondary/mysql"
+	"github.com/wkdwilliams/go-blog/internal/adapters/secondary/database"
 	"github.com/wkdwilliams/go-blog/internal/domain/services"
 	"github.com/wkdwilliams/go-blog/internal/infrastructure"
 )
