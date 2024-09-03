@@ -27,11 +27,11 @@ func main() {
 		log.Fatal(err)
 	}
 	// Initialise secondary port implementations (Secondary adapters)
-	userRepo := mysql.NewUserRepository(db) // <- this is swappable since its just a repo implementation
+	userRepo := database.NewUserRepository(db) // <- this is swappable since its just a repo implementation
 	// Initialise core service layer
 	usersService := services.NewUserService(userRepo) // core business logic doesn't change.
 
-	postRepo := mysql.NewPostRepository(db)
+	postRepo := database.NewPostRepository(db)
 	postService := services.NewPostService(postRepo)
 
 	// Init primary (driving) adapter

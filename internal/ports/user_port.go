@@ -1,14 +1,8 @@
 package ports
 
 import (
-	"errors"
-
 	"github.com/google/uuid"
 	"github.com/wkdwilliams/go-blog/internal/domain/models"
-)
-
-var (
-	ErrUserNotFound = errors.New("user does not exist")
 )
 
 type UserRepository interface {

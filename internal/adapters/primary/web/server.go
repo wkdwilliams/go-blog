@@ -13,7 +13,7 @@ import (
 )
 
 type App struct {
-	echo        *echo.Echo
+	Echo        *echo.Echo
 	UserService services.IUserService
 	PostService services.IPostService
 	port        int
@@ -21,13 +21,13 @@ type App struct {
 
 func NewApp(userService services.IUserService, postService services.IPostService, opts ...AppOption) *App {
 	s := &App{
-		echo:        echo.New(),
+		Echo:        echo.New(),
 		UserService: userService,
 		PostService: postService,
 		port:        8000,
 	}
 
-	s.echo.HTTPErrorHandler = ErrorHandler
+	s.Echo.HTTPErrorHandler = ErrorHandler
 
 	for _, applyOption := range opts {
 		applyOption(s)
@@ -51,9 +51,9 @@ func (a App) GetAuthenticatedUser(c echo.Context) (*models.User, error) {
 }
 
 func (a App) Start() error {
-	return a.echo.Start(fmt.Sprintf(":%d", a.port))
+	return a.Echo.Start(fmt.Sprintf(":%d", a.port))
 }
 
 func (a App) Stop(ctx context.Context) error {
-	return a.echo.Shutdown(ctx)
+	return a.Echo.Shutdown(ctx)
 }

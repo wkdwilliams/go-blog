@@ -15,10 +15,10 @@ import (
 var static embed.FS
 
 func (a *App) initAppRoutes() {
-	a.echo.Use(session.Middleware(sessions.NewCookieStore([]byte(os.Getenv("SECRET")))))
-	a.echo.StaticFS("/static", echo.MustSubFS(static, "static"))
+	a.Echo.Use(session.Middleware(sessions.NewCookieStore([]byte(os.Getenv("SECRET")))))
+	a.Echo.StaticFS("/static", echo.MustSubFS(static, "static"))
 
-	main := a.echo.Group("")
+	main := a.Echo.Group("")
 	main.GET("/health", func(c echo.Context) error {
 		return c.String(200, "ok")
 	})

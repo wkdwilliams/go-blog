@@ -1,4 +1,4 @@
-package mysql_test
+package database_test
 
 import (
 	"testing"
@@ -14,7 +14,7 @@ import (
 func TestGetAllUsers(t *testing.T) {
 	db, mock := infrastructure.NewMysqlMock()
 
-	userRepo := mysql.NewUserRepository(db)
+	userRepo := database.NewUserRepository(db)
 
 	hashed, _ := hashing.HashPassword("pass")
 

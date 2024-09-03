@@ -1,8 +1,11 @@
-package mysql
+package database
 
 import (
+	"errors"
+
 	"github.com/google/uuid"
 	"github.com/wkdwilliams/go-blog/internal/domain/models"
+	"github.com/wkdwilliams/go-blog/internal/ports"
 	"gorm.io/gorm"
 )
 
@@ -22,6 +25,9 @@ func (ur *UserRepository) GetById(id uuid.UUID) (*models.User, error) {
 	user := &models.User{}
 
 	if err := ur.db.First(user, id).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, ports.ErrRecordNotFound
+		}
 		return nil, err
 	}
 

@@ -20,10 +20,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	userRepo := mysql.NewUserRepository(db)
+	userRepo := database.NewUserRepository(db)
 	usersService := services.NewUserService(userRepo)
 
-	postRepo := mysql.NewPostRepository(db)
+	postRepo := database.NewPostRepository(db)
 	postService := services.NewPostService(postRepo)
 
 	user, err := usersService.CreateAccount("admin", "pass", "lewis")
