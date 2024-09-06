@@ -3,29 +3,20 @@ package hashing_test
 import (
 	"testing"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/wkdwilliams/go-blog/pkg/hashing"
 )
 
 func TestHashPassword(t *testing.T) {
 	password, err := hashing.HashPassword("pass")
 
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if len(password) == 0 {
-		t.Fatal("unexpected length of password")
-	}
+	assert.Nil(t, err)
+	assert.Greater(t, len(password), 0)
 }
 
 func TestVerifyPasswordHash(t *testing.T) {
 	password, err := hashing.HashPassword("pass")
 
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if verified := hashing.VerifyPassword("pass", password); !verified {
-		t.Fatal("could not verifiy password")
-	}
+	assert.Nil(t, err)
+	assert.True(t, hashing.VerifyPassword("pass", password))
 }
