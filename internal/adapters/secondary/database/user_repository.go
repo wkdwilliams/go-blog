@@ -53,3 +53,11 @@ func (ur *UserRepository) GetByUsername(username string) (*models.User, error) {
 
 	return user, nil
 }
+
+func (ur *UserRepository) GetTotalCount() int64 {
+	var count int64
+
+	ur.db.Find(&models.User{}).Count(&count)
+
+	return count
+}

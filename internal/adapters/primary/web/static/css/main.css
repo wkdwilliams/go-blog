@@ -1,7 +1,7 @@
 body {
     background-color: #121212;
     color: #e0e0e0;
-    font-family: 'Fira Code', monospace;
+    font-family: "Fira Code", monospace;
 }
 
 .navbar {
@@ -16,6 +16,20 @@ body {
 .navbar-brand:hover,
 .navbar-nav .nav-link:hover {
     color: #76c7c0;
+}
+
+.nav-text {
+    color: #ffffff;
+    display: block;
+    padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x);
+    font-size: var(--bs-nav-link-font-size);
+    font-weight: var(--bs-nav-link-font-weight);
+    color: var(--bs-nav-link-color);
+    text-decoration: none;
+    background: 0 0;
+    border: 0;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+        border-color 0.15s ease-in-out;
 }
 
 .hero-section {
@@ -116,7 +130,7 @@ code {
 }
 
 .login-container .forgot-password a {
-    color: #4CAF50;
+    color: #4caf50;
     text-decoration: none;
 }
 
@@ -141,7 +155,8 @@ label {
     font-weight: bold;
     color: #b0b0b0;
 }
-.form-group input[type="text"], textarea {
+.form-group input[type="text"],
+textarea {
     width: 100%;
     padding: 12px;
     border: 1px solid #333;

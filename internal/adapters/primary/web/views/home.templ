@@ -3,6 +3,7 @@ package views
 import (
 	"github.com/wkdwilliams/go-blog/internal/adapters/primary/web/views/layout"
 	"github.com/wkdwilliams/go-blog/internal/domain/models"
+	"github.com/wkdwilliams/go-blog/pkg/context_helper"
 )
 
 templ Home(posts []models.Post) {
@@ -20,7 +21,11 @@ templ Home(posts []models.Post) {
 				for _, v := range posts {
 					<div class="col-md-6 blog-post">
 						<h2>{ v.Title }</h2>
-						<p class="blog-post-meta">{ v.CreatedAt.Format("January 2, 2006") } by <a href="#">{ v.User.Name }</a></p>
+						if context_helper.UserIsLoggedInFromContext(ctx) {
+							<p class="blog-post-meta">{ v.CreatedAt.Format("January 2, 2006") } by <a href="#">{ v.User.Name }</a> | <a onclick="deletePost(event)" href={ templ.URL("/admin/post/delete/" + v.ID.String()) }>Delete</a></p>
+						} else {
+							<p class="blog-post-meta">{ v.CreatedAt.Format("January 2, 2006") } by <a href="#">{ v.User.Name }</a></p>
+						}
 						@templ.Raw(v.Content)
 					</div>
 				}
@@ -44,6 +49,23 @@ templ Home(posts []models.Post) {
     		});
 			localStorage.setItem("loaded", 1)
 		};
+
+		function deletePost(event) {
+			event.preventDefault();
+			Swal.fire({
+  				title: "Are you sure?",
+  				// text: "You won't be able to revert this!",
+  				icon: "warning",
+  				showCancelButton: true,
+  				confirmButtonColor: "#3085d6",
+  				cancelButtonColor: "#d33",
+  				confirmButtonText: "Yes, delete it!"
+			}).then((result) => {
+  				if (result.isConfirmed) {
+    				window.location.href = event.target.href;
+  				}
+			});
+		}
 	</script>
 	}
 }

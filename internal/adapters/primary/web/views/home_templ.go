@@ -11,6 +11,7 @@ import templruntime "github.com/a-h/templ/runtime"
 import (
 	"github.com/wkdwilliams/go-blog/internal/adapters/primary/web/views/layout"
 	"github.com/wkdwilliams/go-blog/internal/domain/models"
+	"github.com/wkdwilliams/go-blog/pkg/context_helper"
 )
 
 func Home(posts []models.Post) templ.Component {
@@ -55,41 +56,87 @@ func Home(posts []models.Post) templ.Component {
 				var templ_7745c5c3_Var3 string
 				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(v.Title)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/primary/web/views/home.templ`, Line: 22, Col: 19}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/primary/web/views/home.templ`, Line: 23, Col: 19}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h2><p class=\"blog-post-meta\">")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h2>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var4 string
-				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(v.CreatedAt.Format("January 2, 2006"))
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/primary/web/views/home.templ`, Line: 23, Col: 71}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" by <a href=\"#\">")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var5 string
-				templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(v.User.Name)
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/primary/web/views/home.templ`, Line: 23, Col: 102}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</a></p>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
+				if context_helper.UserIsLoggedInFromContext(ctx) {
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<p class=\"blog-post-meta\">")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var4 string
+					templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(v.CreatedAt.Format("January 2, 2006"))
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/primary/web/views/home.templ`, Line: 25, Col: 72}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" by <a href=\"#\">")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var5 string
+					templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(v.User.Name)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/primary/web/views/home.templ`, Line: 25, Col: 103}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</a> | <a onclick=\"deletePost(event)\" href=\"")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var6 templ.SafeURL = templ.URL("/admin/post/delete/" + v.ID.String())
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(string(templ_7745c5c3_Var6)))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\">Delete</a></p>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				} else {
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<p class=\"blog-post-meta\">")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var7 string
+					templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(v.CreatedAt.Format("January 2, 2006"))
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/primary/web/views/home.templ`, Line: 27, Col: 72}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" by <a href=\"#\">")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var8 string
+					templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(v.User.Name)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/primary/web/views/home.templ`, Line: 27, Col: 103}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</a></p>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
 				}
 				templ_7745c5c3_Err = templ.Raw(v.Content).Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
@@ -100,7 +147,7 @@ func Home(posts []models.Post) templ.Component {
 					return templ_7745c5c3_Err
 				}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></div><script>\n\t\twindow.onload = function() {\n\t\t\tconst text = \"This blog was coded entirely in <b>Golang</b>\";\n\n\t\t\tif(localStorage.getItem(\"loaded\") != null){\n\t\t\t\tdocument.getElementById(\"sub-desciption\").innerHTML = text;\n\t\t\t\treturn;\n\t\t\t}\n    \t\tconst typed = new Typed('#sub-desciption', {\n      \t\t\tstrings: [text],\n      \t\t\ttypeSpeed: 40,\n\t\t\t\tonComplete: (self) => {\n\t\t\t\t\ttyped.destroy();\n\t\t\t\t\tdocument.getElementById(\"sub-desciption\").innerHTML = text;\n\t\t\t\t},\n    \t\t});\n\t\t\tlocalStorage.setItem(\"loaded\", 1)\n\t\t};\n\t</script>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></div><script>\n\t\twindow.onload = function() {\n\t\t\tconst text = \"This blog was coded entirely in <b>Golang</b>\";\n\n\t\t\tif(localStorage.getItem(\"loaded\") != null){\n\t\t\t\tdocument.getElementById(\"sub-desciption\").innerHTML = text;\n\t\t\t\treturn;\n\t\t\t}\n    \t\tconst typed = new Typed('#sub-desciption', {\n      \t\t\tstrings: [text],\n      \t\t\ttypeSpeed: 40,\n\t\t\t\tonComplete: (self) => {\n\t\t\t\t\ttyped.destroy();\n\t\t\t\t\tdocument.getElementById(\"sub-desciption\").innerHTML = text;\n\t\t\t\t},\n    \t\t});\n\t\t\tlocalStorage.setItem(\"loaded\", 1)\n\t\t};\n\n\t\tfunction deletePost(event) {\n\t\t\tevent.preventDefault();\n\t\t\tSwal.fire({\n  \t\t\t\ttitle: \"Are you sure?\",\n  \t\t\t\t// text: \"You won't be able to revert this!\",\n  \t\t\t\ticon: \"warning\",\n  \t\t\t\tshowCancelButton: true,\n  \t\t\t\tconfirmButtonColor: \"#3085d6\",\n  \t\t\t\tcancelButtonColor: \"#d33\",\n  \t\t\t\tconfirmButtonText: \"Yes, delete it!\"\n\t\t\t}).then((result) => {\n  \t\t\t\tif (result.isConfirmed) {\n    \t\t\t\twindow.location.href = event.target.href;\n  \t\t\t\t}\n\t\t\t});\n\t\t}\n\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

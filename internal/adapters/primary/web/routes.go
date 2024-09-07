@@ -7,6 +7,7 @@ import (
 	"github.com/gorilla/sessions"
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
+	echoMiddleware "github.com/labstack/echo/v4/middleware"
 	"github.com/wkdwilliams/go-blog/internal/adapters/primary/web/handlers"
 	"github.com/wkdwilliams/go-blog/internal/adapters/primary/web/middleware"
 )
@@ -15,21 +16,45 @@ import (
 var static embed.FS
 
 func (a *App) initAppRoutes() {
-	a.Echo.Use(session.Middleware(sessions.NewCookieStore([]byte(os.Getenv("SECRET")))))
+	// We need this to make static files (js, css) public
 	a.Echo.StaticFS("/static", echo.MustSubFS(static, "static"))
+	a.Echo.Pre(echoMiddleware.RemoveTrailingSlash())
 
 	main := a.Echo.Group("")
+
+	// Middleware for everything
+	main.Use(session.Middleware(sessions.NewCookieStore([]byte(os.Getenv("SECRET")))))
+	main.Use(middleware.AuthenticatedUser(a.UserService))
+
+	// Health check
 	main.GET("/health", func(c echo.Context) error {
 		return c.String(200, "ok")
-	})
-	main.GET("", handlers.IndexHandler(a.PostService))
+	}).Name = "health"
 
-	admin := main.Group("/admin", middleware.IsLoggedIn)
-	admin.GET("", handlers.AdminIndexHandler())
+	// Handle the index request e.g. http://host/
+	main.GET("", handlers.IndexHandler(a.PostService)).Name = "index"
 
-	admin.POST("/post", handlers.AdminPostCreateHandler(a.PostService))
-	admin.GET("/login", handlers.AdminLoginHandler())
-	admin.POST("/login", handlers.AdminTryLoginHandler(a.UserService))
+	// Group for the admin routes e.g. http://host/admin/*
+	admin := main.Group("/admin", middleware.AdminAuthorized)
 
-	main.POST("/users", handlers.CreateAccount(a.UserService))
+	// Handle the admin index request e.g. http://host/admin
+	admin.GET("", handlers.AdminIndexHandler).Name = "admin-index"
+
+	// Handle the post create request
+	admin.POST("/post", handlers.AdminPostCreateHandler(a.PostService)).Name = "admin-post"
+
+	// Handle the post delete request
+	admin.GET("/post/delete/:id", handlers.AdminPostDeleteHandler(a.PostService)).Name = "admin-post-delete"
+
+	// Handle the login request to show login form
+	admin.GET("/login", handlers.AdminLoginHandler).Name = "admin-login"
+
+	// Handle the login request to authenticate the user
+	admin.POST("/login", handlers.AdminTryLoginHandler(a.UserService)).Name = "admin-login-try"
+
+	// Handle the logout request
+	admin.GET("/logout", handlers.AdminLogout).Name = "admin-logout"
+
+	// Handle the user account create request
+	admin.POST("/users", handlers.CreateAccount(a.UserService)).Name = "admin-user-create"
 }

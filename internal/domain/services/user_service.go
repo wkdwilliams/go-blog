@@ -16,6 +16,7 @@ type IUserService interface {
 	GetAll() ([]models.User, error)
 	GetByUsername(username string) (*models.User, error)
 	Authenticate(username, password string) (*models.User, error)
+	GetTotalCount() int64
 }
 
 type UserService struct {
@@ -64,4 +65,8 @@ func (s *UserService) Authenticate(username, password string) (*models.User, err
 	}
 
 	return user, nil
+}
+
+func (s *UserService) GetTotalCount() int64 {
+	return s.userRepository.GetTotalCount()
 }

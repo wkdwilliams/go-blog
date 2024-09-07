@@ -9,4 +9,5 @@ type PostRepository interface {
 	Add(u models.Post) error
 	GetById(id uuid.UUID) (*models.Post, error)
 	GetAll() ([]models.Post, error)
+	Delete(id uuid.UUID) error
 }

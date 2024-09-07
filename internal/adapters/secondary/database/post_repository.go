@@ -43,3 +43,7 @@ func (ur *PostRepository) GetAll() ([]models.Post, error) {
 
 	return post, nil
 }
+
+func (ur *PostRepository) Delete(id uuid.UUID) error {
+	return ur.db.Where("id = ?", id).Delete(&models.Post{}).Error
+}
