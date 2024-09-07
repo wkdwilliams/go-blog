@@ -2,29 +2,28 @@ package web
 
 import (
 	"context"
-	"errors"
 	"fmt"
+	"time"
 
-	"github.com/google/uuid"
-	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
-	"github.com/wkdwilliams/go-blog/internal/domain/models"
 	"github.com/wkdwilliams/go-blog/internal/domain/services"
 )
 
 type App struct {
 	Echo        *echo.Echo
+	port        int
+	startTime   time.Time
 	UserService services.IUserService
 	PostService services.IPostService
-	port        int
 }
 
 func NewApp(userService services.IUserService, postService services.IPostService, opts ...AppOption) *App {
 	s := &App{
 		Echo:        echo.New(),
+		port:        8000,
+		startTime:   time.Now(),
 		UserService: userService,
 		PostService: postService,
-		port:        8000,
 	}
 
 	s.Echo.HTTPErrorHandler = ErrorHandler
@@ -38,22 +37,14 @@ func NewApp(userService services.IUserService, postService services.IPostService
 	return s
 }
 
-func (a App) GetAuthenticatedUser(c echo.Context) (*models.User, error) {
-	sess, err := session.Get("goblog", c)
-	if err != nil {
-		return nil, err
-	}
-	if _, ok := sess.Values["user_id"]; !ok {
-		return nil, errors.New("not authenticated")
-	}
-
-	return a.UserService.GetById(sess.Values["user_id"].(uuid.UUID))
-}
-
 func (a App) Start() error {
 	return a.Echo.Start(fmt.Sprintf(":%d", a.port))
 }
 
 func (a App) Stop(ctx context.Context) error {
 	return a.Echo.Shutdown(ctx)
+}
+
+func (a App) Uptime() time.Duration {
+	return time.Since(a.startTime)
 }
