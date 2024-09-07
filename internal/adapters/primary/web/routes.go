@@ -23,11 +23,13 @@ func (a *App) initAppRoutes() {
 		return c.String(200, "ok")
 	})
 	main.GET("", handlers.IndexHandler(a.PostService))
-	main.POST("/users", handlers.CreateAccount(a.UserService))
 
 	admin := main.Group("/admin", middleware.IsLoggedIn)
 	admin.GET("", handlers.AdminIndexHandler())
+
 	admin.POST("/post", handlers.AdminPostCreateHandler(a.PostService))
 	admin.GET("/login", handlers.AdminLoginHandler())
 	admin.POST("/login", handlers.AdminTryLoginHandler(a.UserService))
+
+	main.POST("/users", handlers.CreateAccount(a.UserService))
 }
