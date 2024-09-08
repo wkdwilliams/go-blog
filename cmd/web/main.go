@@ -26,16 +26,14 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// Initialise secondary port implementations (Secondary adapters)
-	userRepo := database.NewUserRepository(db) // <- this is swappable since its just a repo implementation
-	// Initialise core service layer
-	usersService := services.NewUserService(userRepo) // core business logic doesn't change.
+
+	// Initialize the services
+	userRepo := database.NewUserRepository(db)
+	usersService := services.NewUserService(userRepo)
 
 	postRepo := database.NewPostRepository(db)
 	postService := services.NewPostService(postRepo)
 
-	// Init primary (driving) adapter
-	// this is swapple since we can spin up another primary adapter, and inject business logic
 	port, err := strconv.Atoi(os.Getenv("PORT"))
 
 	if err != nil {
@@ -62,8 +60,10 @@ func main() {
 	}
 
 	d, err := db.DB()
+
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	d.Close()
 }
