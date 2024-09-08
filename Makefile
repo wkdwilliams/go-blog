@@ -7,7 +7,7 @@ run: compile
 compile:
 	mkdir -p bin
 	@templ generate
-	go build -o bin/main cmd/web/main.go
+	go build -ldflags "-w" -o bin/main cmd/web/main.go
 
 templ:
 	source .env && templ generate --watch --proxy=http://localhost:$$PORT
