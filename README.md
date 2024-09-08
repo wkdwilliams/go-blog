@@ -1,5 +1,3 @@
-![Gopher](https://raw.githubusercontent.com/wkdwilliams/go-blog/master/gopher.jpeg)
-
 # Go Blog
 
 [Live Demo](https://lewiswilliams.info/)
