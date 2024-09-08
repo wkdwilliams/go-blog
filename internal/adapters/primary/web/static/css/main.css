@@ -18,6 +18,10 @@ body {
     color: #76c7c0;
 }
 
+.nav-link-admin {
+    color: #3498db;
+}
+
 .nav-text {
     color: #ffffff;
     display: block;
@@ -187,4 +191,8 @@ textarea {
 }
 .form-group button:hover {
     background-color: #9b5dfc;
+}
+
+.validation-error {
+    color: #e74c3c;
 }

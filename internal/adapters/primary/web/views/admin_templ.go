@@ -8,7 +8,10 @@ package views
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "github.com/wkdwilliams/go-blog/internal/adapters/primary/web/views/layout"
+import (
+	"github.com/wkdwilliams/go-blog/internal/adapters/primary/web/views/layout"
+	"github.com/wkdwilliams/go-blog/pkg/validator"
+)
 
 func postCreatedText() templ.CSSClass {
 	templ_7745c5c3_CSSBuilder := templruntime.GetBuilder()
@@ -22,7 +25,7 @@ func postCreatedText() templ.CSSClass {
 	}
 }
 
-func Admin(postCreated bool) templ.Component {
+func Admin(postCreated bool, validationErrors error) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
@@ -52,13 +55,59 @@ func Admin(postCreated bool) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"form-container\"><h1>Create a New Blog Post</h1><form action=\"/admin/post\" method=\"POST\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"form-container\"><h1>Create a New Blog Post</h1>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			if e, ok := validationErrors.(validator.ValidationErrors); ok {
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<ul>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				for i, v := range e.Errors {
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<li class=\"validation-error\">")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var3 string
+					templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(i)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/primary/web/views/admin.templ`, Line: 21, Col: 38}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" - ")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var4 string
+					templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(v)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/primary/web/views/admin.templ`, Line: 21, Col: 46}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</li>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</ul>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<form action=\"/admin/post\" method=\"POST\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if postCreated {
-				var templ_7745c5c3_Var3 = []any{postCreatedText()}
-				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var3...)
+				var templ_7745c5c3_Var5 = []any{postCreatedText()}
+				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var5...)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -66,12 +115,12 @@ func Admin(postCreated bool) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var4 string
-				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var3).String())
+				var templ_7745c5c3_Var6 string
+				templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var5).String())
 				if templ_7745c5c3_Err != nil {
 					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/primary/web/views/admin.templ`, Line: 1, Col: 0}
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -80,7 +129,7 @@ func Admin(postCreated bool) templ.Component {
 					return templ_7745c5c3_Err
 				}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"form-group\"><label for=\"title\">Post Title</label> <input type=\"text\" id=\"title\" name=\"title\" placeholder=\"Enter your blog post title\" required></div><div class=\"form-group\"><label for=\"content\">Post Content</label> <textarea id=\"content\" name=\"content\" placeholder=\"I just created some new cool code in JavaScript:\n&lt;pre&gt;&lt;code class=&#39;language-javascript&#39;&gt;\nconst a = 1;\n&lt;/code&gt;&lt;/pre&gt;\" required></textarea><p class=\"helper-text\">You can use HTML tags for formatting your content.</p></div><div class=\"form-group\"><button type=\"submit\">Publish Post</button></div></form></div>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"form-group\"><label for=\"title\">Post Title</label> <input type=\"text\" id=\"title\" name=\"title\" placeholder=\"Enter your blog post title\" required></div><div class=\"form-group\"><label for=\"content\">Post Content</label> <textarea required id=\"content\" name=\"content\" placeholder=\"I just created some new cool code in JavaScript:\n&lt;pre&gt;&lt;code class=&#39;language-javascript&#39;&gt;\nconst a = 1;\n&lt;/code&gt;&lt;/pre&gt;\"></textarea><p class=\"helper-text\">You can use HTML tags for formatting your content.</p></div><div class=\"form-group\"><button type=\"submit\">Publish Post</button></div></form></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

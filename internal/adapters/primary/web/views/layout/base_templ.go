@@ -46,7 +46,7 @@ func Base() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" | <a href=\"/admin/logout\">logout</a></span></li>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" | <a class=\"nav-link-admin\" href=\"/admin\">Create</a> | <a class=\"nav-link-admin\" href=\"/admin/logout\">logout</a></span></li>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

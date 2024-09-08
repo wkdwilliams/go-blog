@@ -10,10 +10,11 @@ import (
 	"github.com/wkdwilliams/go-blog/internal/adapters/primary/web/views"
 	"github.com/wkdwilliams/go-blog/internal/domain/services"
 	"github.com/wkdwilliams/go-blog/pkg/context_helper"
+	"github.com/wkdwilliams/go-blog/pkg/validator"
 )
 
 func AdminIndexHandler(c echo.Context) error {
-	return views.Admin(false).Render(c.Request().Context(), c.Response().Writer)
+	return views.Admin(false, nil).Render(c.Request().Context(), c.Response().Writer)
 }
 
 func AdminLoginHandler(c echo.Context) error {
@@ -21,26 +22,33 @@ func AdminLoginHandler(c echo.Context) error {
 }
 
 type createPostRequest struct {
-	Title   string `form:"title"`
-	Content string `form:"content"`
+	Title   string `form:"title" validate:"required"`
+	Content string `form:"content" validate:"required"`
 }
 
 func AdminPostCreateHandler(postService services.IPostService) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		var createPostRequest createPostRequest
-		if err := c.Bind(&createPostRequest); err != nil {
+		var payload createPostRequest
+		if err := c.Bind(&payload); err != nil {
 			return err
 		}
 
+		if err := c.Validate(payload); err != nil {
+			return views.Admin(
+				false,
+				validator.ParseErrors(&payload, err, "form"),
+			).Render(c.Request().Context(), c.Response().Writer)
+		}
+
 		if _, err := postService.Create(
-			createPostRequest.Title,
-			createPostRequest.Content,
+			payload.Title,
+			payload.Content,
 			context_helper.GetUserFromEchoContext(c).ID,
 		); err != nil {
 			return err
 		}
 
-		return views.Admin(true).Render(c.Request().Context(), c.Response().Writer)
+		return views.Admin(true, nil).Render(c.Request().Context(), c.Response().Writer)
 	}
 }
 

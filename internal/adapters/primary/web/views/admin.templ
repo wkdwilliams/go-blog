@@ -1,6 +1,9 @@
 package views
 
-import "github.com/wkdwilliams/go-blog/internal/adapters/primary/web/views/layout"
+import (
+	"github.com/wkdwilliams/go-blog/internal/adapters/primary/web/views/layout"
+	"github.com/wkdwilliams/go-blog/pkg/validator"
+)
 
 css postCreatedText() {
 	margin-top: 30px;
@@ -8,10 +11,17 @@ css postCreatedText() {
 	color: green;
 }
 
-templ Admin(postCreated bool) {
+templ Admin(postCreated bool, validationErrors error) {
 	@layout.Base() {
 		<div class="form-container">
 			<h1>Create a New Blog Post</h1>
+			if e, ok := validationErrors.(validator.ValidationErrors); ok {
+				<ul>
+					for i, v := range e.Errors {
+						<li class="validation-error">{ i } - { v }</li>
+					}
+				</ul>
+			}
 			<form action="/admin/post" method="POST">
 				if postCreated {
 					<p class={ postCreatedText() }>Post Created</p>
@@ -23,13 +33,13 @@ templ Admin(postCreated bool) {
 				<div class="form-group">
 					<label for="content">Post Content</label>
 					<textarea
+						required
 						id="content"
 						name="content"
 						placeholder="I just created some new cool code in JavaScript:
 <pre><code class='language-javascript'>
 const a = 1;
 </code></pre>"
-						required
 					></textarea>
 					<p class="helper-text">You can use HTML tags for formatting your content.</p>
 				</div>

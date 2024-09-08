@@ -7,6 +7,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/wkdwilliams/go-blog/internal/domain/services"
+	"github.com/wkdwilliams/go-blog/pkg/validator"
 )
 
 type App struct {
@@ -21,12 +22,12 @@ func NewApp(userService services.IUserService, postService services.IPostService
 	s := &App{
 		Echo:        echo.New(),
 		port:        8000,
-		startTime:   time.Now(),
 		UserService: userService,
 		PostService: postService,
 	}
 
 	s.Echo.HTTPErrorHandler = ErrorHandler
+	s.Echo.Validator = validator.NewValidator()
 
 	for _, applyOption := range opts {
 		applyOption(s)
@@ -37,7 +38,8 @@ func NewApp(userService services.IUserService, postService services.IPostService
 	return s
 }
 
-func (a App) Start() error {
+func (a *App) Start() error {
+	a.startTime = time.Now()
 	return a.Echo.Start(fmt.Sprintf(":%d", a.port))
 }
 
