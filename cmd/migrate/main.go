@@ -13,11 +13,17 @@ import (
 	"github.com/wkdwilliams/go-blog/internal/infrastructure"
 )
 
+const (
+	commandUp    = "up"
+	commandDown  = "down"
+	databaseName = "mysql"
+)
+
 func main() {
 	command := flag.String("command", "", "Migrate up or down")
 	flag.Parse()
 
-	if *command != "up" && *command != "down" {
+	if *command != commandUp && *command != commandDown {
 		fmt.Println("Usage: migrate -command [up,down]")
 		return
 	}
@@ -45,7 +51,7 @@ func main() {
 
 	m, err := migrate.NewWithDatabaseInstance(
 		"file://migrations",
-		"mysql",
+		databaseName,
 		driver,
 	)
 
@@ -53,7 +59,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	if *command == "up" {
+	if *command == commandUp {
 		if err := m.Up(); err != nil {
 			log.Fatal(err)
 		}
