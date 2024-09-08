@@ -47,7 +47,7 @@ templ Base() {
 							</li>
 							if context_helper.UserIsLoggedInFromContext(ctx) {
 								<li class="nav-item">
-									<span class="nav-text">| Logged In: { context_helper.GetUserFromContext(ctx).Name } | <a href="/admin/logout">logout</a></span>
+									<span class="nav-text">| Logged In: { context_helper.GetUserFromContext(ctx).Name } | <a class="nav-link-admin" href="/admin">Create</a> | <a class="nav-link-admin" href="/admin/logout">logout</a></span>
 								</li>
 							}
 						</ul>

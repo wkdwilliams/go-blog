@@ -8,6 +8,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"github.com/wkdwilliams/go-blog/internal/adapters/primary/web/views"
+	"github.com/wkdwilliams/go-blog/pkg/validator"
 )
 
 func ErrorHandler(err error, c echo.Context) {
@@ -19,6 +20,10 @@ func ErrorHandler(err error, c echo.Context) {
 		view = views.NotFound()
 	} else if uuid.IsInvalidLengthError(err) {
 		view = views.NotFound()
+	} else if errors.Is(err, validator.ValidationErrors{}) {
+		view = views.BadRequest()
+		// c.JSON(http.StatusBadRequest, err)
+		// return
 	} else if errors.Is(err, echo.ErrBadRequest) {
 		view = views.BadRequest()
 	} else {
