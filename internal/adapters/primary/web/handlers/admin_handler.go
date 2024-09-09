@@ -22,7 +22,7 @@ func AdminLoginHandler(c echo.Context) error {
 }
 
 type createPostRequest struct {
-	Title   string `form:"title" validate:"required"`
+	Title   string `form:"title" validate:"required,max=1"`
 	Content string `form:"content" validate:"required"`
 }
 
@@ -33,12 +33,16 @@ func AdminPostCreateHandler(postService services.IPostService) echo.HandlerFunc 
 			return err
 		}
 
-		if err := c.Validate(payload); err != nil {
-			return views.Admin(
-				false,
-				validator.ParseErrors(&payload, err, "form"),
-			).Render(c.Request().Context(), c.Response().Writer)
+		if err := validator.Validate(&payload); err != nil {
+			return err
 		}
+
+		// if err := c.Validate(payload); err != nil {
+		// 	return views.Admin(
+		// 		false,
+		// 		validator.ParseErrors(&payload, err, "form"),
+		// 	).Render(c.Request().Context(), c.Response().Writer)
+		// }
 
 		if _, err := postService.Create(
 			payload.Title,

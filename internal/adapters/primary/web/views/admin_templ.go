@@ -129,7 +129,7 @@ func Admin(postCreated bool, validationErrors error) templ.Component {
 					return templ_7745c5c3_Err
 				}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"form-group\"><label for=\"title\">Post Title</label> <input type=\"text\" id=\"title\" name=\"title\" placeholder=\"Enter your blog post title\" required></div><div class=\"form-group\"><label for=\"content\">Post Content</label> <textarea required id=\"content\" name=\"content\" placeholder=\"I just created some new cool code in JavaScript:\n&lt;pre&gt;&lt;code class=&#39;language-javascript&#39;&gt;\nconst a = 1;\n&lt;/code&gt;&lt;/pre&gt;\"></textarea><p class=\"helper-text\">You can use HTML tags for formatting your content.</p></div><div class=\"form-group\"><button type=\"submit\">Publish Post</button></div></form></div>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"form-group\"><label for=\"title\">Post Title</label> <input type=\"text\" id=\"title\" name=\"title\" placeholder=\"Enter your blog post title\"></div><div class=\"form-group\"><label for=\"content\">Post Content</label> <textarea id=\"content\" name=\"content\" placeholder=\"I just created some new cool code in JavaScript:\n&lt;pre&gt;&lt;code class=&#39;language-javascript&#39;&gt;\nconst a = 1;\n&lt;/code&gt;&lt;/pre&gt;\"></textarea><p class=\"helper-text\">You can use HTML tags for formatting your content.</p></div><div class=\"form-group\"><button type=\"submit\">Publish Post</button></div></form></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

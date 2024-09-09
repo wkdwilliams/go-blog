@@ -2,71 +2,50 @@ package validator
 
 import (
 	"errors"
+	"fmt"
 	"reflect"
+	"regexp"
+	"strings"
 
-	v "github.com/go-playground/validator/v10"
+	mainValidation "github.com/go-playground/validator/v10"
 )
 
-type Validator struct {
-	validator *v.Validate
-}
+func Validate(s any) error {
+	validator := mainValidation.New(mainValidation.WithRequiredStructEnabled())
 
-func (v Validator) Validate(i interface{}) error {
-	if err := v.validator.Struct(i); err != nil {
-		return err
+	if err := validator.Struct(s); err != nil {
+		return parseErrors(s, err)
 	}
+
 	return nil
 }
 
-func NewValidator() Validator {
-	return Validator{
-		validator: v.New(),
-	}
-}
-
-type errorMap map[string]string
-
-type ValidationErrors struct {
-	Errors errorMap `json:"errors"`
-}
-
-func (j ValidationErrors) Error() string {
-	return "validation errors occurred"
-}
-
-func (j ValidationErrors) Is(err error) bool {
-	_, ok := err.(ValidationErrors)
-	return ok
-}
-
-// 't' must be a pointer to a struct. The 'lookup' must be either "form" or "json".
-func ParseErrors(t any, err error, lookup string) error {
-	// Ensure lookup is either "form" or "json"
-	if lookup != "form" && lookup != "json" {
-		return errors.New("lookup must be either 'form' or 'json'")
-	}
-
-	// Ensure 't' is a pointer to a struct
-	tType := reflect.TypeOf(t)
-	if tType == nil || tType.Kind() != reflect.Ptr || tType.Elem().Kind() != reflect.Struct {
-		return errors.New("t must be a pointer to a struct")
+// 't' must be a pointer to a struct.
+func parseErrors(t any, err error) error {
+	tType, e := reflecType(t)
+	if e != nil {
+		return e
 	}
 
 	errors := make(errorMap)
 
-	if validationErrors, ok := err.(v.ValidationErrors); ok {
+	// I think the error will always be of type ValidationErrors...
+	// But
+	if validationErrors, ok := err.(mainValidation.ValidationErrors); ok {
 		for _, valErr := range validationErrors {
-			field, exists := tType.Elem().FieldByName(valErr.Field())
-			if !exists {
+			a := tagType(valErr, tType)
+
+			if a == nil {
 				continue
 			}
-
-			fieldTag, exists := field.Tag.Lookup(lookup)
-			if !exists {
-				fieldTag = valErr.Field()
+			errMsg := strings.Split(valErr.Error(), "Error:")
+			if len(errMsg) == 2 {
+				parseErrorMessage(&errMsg[1])
+				errors[*a] = strings.Split(valErr.Error(), "Error:")[1]
+			} else {
+				errors[*a] = valErr.Error()
 			}
 
-			errors[fieldTag] = valErr.Tag()
 		}
 	}
 
@@ -77,4 +56,40 @@ func ParseErrors(t any, err error, lookup string) error {
 	return ValidationErrors{
 		Errors: errors,
 	}
+}
+
+func parseErrorMessage(msg *string) {
+	// Compile the regex
+	re := regexp.MustCompile(`\b(for|'[^']+')\b`)
+
+	// Replace the matches with an empty string
+	result := re.ReplaceAllString(*msg, "")
+
+	// Print the result
+	fmt.Println(result)
+}
+
+func reflecType(t any) (reflect.Type, error) {
+	tType := reflect.TypeOf(t)
+
+	if tType == nil || tType.Kind() != reflect.Ptr || tType.Elem().Kind() != reflect.Struct {
+		return nil, errors.New("t must be a pointer to a struct")
+	}
+
+	return tType, nil
+}
+
+func tagType(fieldError mainValidation.FieldError, fieldType reflect.Type) *string {
+	field, exists := fieldType.Elem().FieldByName(fieldError.Field())
+	if !exists {
+		return nil
+	}
+
+	if fieldTag, exists := field.Tag.Lookup("form"); exists {
+		return &fieldTag
+	} else if fieldTag, exists := field.Tag.Lookup("json"); exists {
+		return &fieldTag
+	}
+
+	return nil
 }

@@ -2,6 +2,7 @@ package web
 
 import (
 	"errors"
+	"net/http"
 
 	"github.com/a-h/templ"
 	"github.com/google/uuid"
@@ -22,8 +23,8 @@ func ErrorHandler(err error, c echo.Context) {
 		view = views.NotFound()
 	} else if errors.Is(err, validator.ValidationErrors{}) {
 		view = views.BadRequest()
-		// c.JSON(http.StatusBadRequest, err)
-		// return
+		c.JSON(http.StatusBadRequest, err)
+		return
 	} else if errors.Is(err, echo.ErrBadRequest) {
 		view = views.BadRequest()
 	} else {
