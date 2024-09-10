@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 
+	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/google/uuid"
 	"github.com/gorilla/sessions"
 	"github.com/labstack/echo-contrib/session"
@@ -10,7 +11,6 @@ import (
 	"github.com/wkdwilliams/go-blog/internal/adapters/primary/web/views"
 	"github.com/wkdwilliams/go-blog/internal/domain/services"
 	"github.com/wkdwilliams/go-blog/pkg/context_helper"
-	"github.com/wkdwilliams/go-blog/pkg/validator"
 )
 
 func AdminIndexHandler(c echo.Context) error {
@@ -21,9 +21,17 @@ func AdminLoginHandler(c echo.Context) error {
 	return views.AdminLogin(false).Render(c.Request().Context(), c.Response().Writer)
 }
 
+// The request for creating a new blog post
 type createPostRequest struct {
-	Title   string `form:"title" validate:"required,max=1"`
-	Content string `form:"content" validate:"required"`
+	Title   string `form:"title"`
+	Content string `form:"content"`
+}
+
+func (a createPostRequest) Validate() error {
+	return validation.ValidateStruct(&a,
+		validation.Field(&a.Title, validation.Required, validation.Length(1, 50)),
+		validation.Field(&a.Content, validation.Required, validation.Length(1, 3000)),
+	)
 }
 
 func AdminPostCreateHandler(postService services.IPostService) echo.HandlerFunc {
@@ -33,16 +41,9 @@ func AdminPostCreateHandler(postService services.IPostService) echo.HandlerFunc 
 			return err
 		}
 
-		if err := validator.Validate(&payload); err != nil {
-			return err
+		if err := payload.Validate(); err != nil {
+			return views.Admin(false, err).Render(c.Request().Context(), c.Response().Writer)
 		}
-
-		// if err := c.Validate(payload); err != nil {
-		// 	return views.Admin(
-		// 		false,
-		// 		validator.ParseErrors(&payload, err, "form"),
-		// 	).Render(c.Request().Context(), c.Response().Writer)
-		// }
 
 		if _, err := postService.Create(
 			payload.Title,
@@ -77,12 +78,23 @@ type loginRequest struct {
 	Password string `form:"password"`
 }
 
+func (a loginRequest) Validate() error {
+	return validation.ValidateStruct(&a,
+		validation.Field(&a.Username, validation.Required, validation.Length(1, 50)),
+		validation.Field(&a.Password, validation.Required, validation.Length(1, 0)),
+	)
+}
+
 func AdminTryLoginHandler(userService services.IUserService) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		loginRequest := &loginRequest{}
 
 		if err := c.Bind(loginRequest); err != nil {
 			return err
+		}
+
+		if err := loginRequest.Validate(); err != nil {
+			return views.AdminLogin(true).Render(c.Request().Context(), c.Response().Writer)
 		}
 
 		user, err := userService.Authenticate(loginRequest.Username, loginRequest.Password)
