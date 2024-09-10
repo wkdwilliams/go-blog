@@ -30,7 +30,7 @@ type createPostRequest struct {
 func (a createPostRequest) Validate() error {
 	return validation.ValidateStruct(&a,
 		validation.Field(&a.Title, validation.Required, validation.Length(1, 50)),
-		validation.Field(&a.Content, validation.Required, validation.Length(1, 3000)),
+		validation.Field(&a.Content, validation.Required, validation.Length(1, 10000)),
 	)
 }
 
