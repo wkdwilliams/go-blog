@@ -44,7 +44,6 @@ func main() {
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer stop()
-	// Start server
 	go func() {
 		if err := srv.Start(); err != nil && err != http.ErrServerClosed {
 			log.Fatal(err)

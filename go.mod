@@ -7,9 +7,9 @@ toolchain go1.23.0
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.2
 	github.com/a-h/templ v0.2.771
-	github.com/go-playground/validator/v10 v10.22.0
+	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/golang-migrate/migrate/v4 v4.17.1
-	github.com/google/uuid v1.4.0
+	github.com/google/uuid v1.6.0
 	github.com/gorilla/sessions v1.4.0
 	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo-contrib v0.17.1
@@ -25,9 +25,6 @@ require (
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
-	github.com/go-playground/locales v0.14.1 // indirect
-	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-sql-driver/mysql v1.8.1 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/gorilla/context v1.1.2 // indirect
@@ -36,7 +33,6 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
-	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect

@@ -1,8 +1,8 @@
 package views
 
 import (
+	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/wkdwilliams/go-blog/internal/adapters/primary/web/views/layout"
-	"github.com/wkdwilliams/go-blog/pkg/validator"
 )
 
 css postCreatedText() {
@@ -15,10 +15,10 @@ templ Admin(postCreated bool, validationErrors error) {
 	@layout.Base() {
 		<div class="form-container">
 			<h1>Create a New Blog Post</h1>
-			if e, ok := validationErrors.(validator.ValidationErrors); ok {
+			if validationErrors != nil {
 				<ul>
-					for i, v := range e.Errors {
-						<li class="validation-error">{ i } - { v }</li>
+					for i, v := range validationErrors.(validation.Errors) {
+						<li class="validation-error">{ i } - { v.Error() }</li>
 					}
 				</ul>
 			}

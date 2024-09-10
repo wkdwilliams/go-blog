@@ -9,8 +9,8 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
+	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/wkdwilliams/go-blog/internal/adapters/primary/web/views/layout"
-	"github.com/wkdwilliams/go-blog/pkg/validator"
 )
 
 func postCreatedText() templ.CSSClass {
@@ -59,12 +59,12 @@ func Admin(postCreated bool, validationErrors error) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			if e, ok := validationErrors.(validator.ValidationErrors); ok {
+			if validationErrors != nil {
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<ul>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				for i, v := range e.Errors {
+				for i, v := range validationErrors.(validation.Errors) {
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<li class=\"validation-error\">")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
@@ -83,9 +83,9 @@ func Admin(postCreated bool, validationErrors error) templ.Component {
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var4 string
-					templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(v)
+					templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(v.Error())
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/primary/web/views/admin.templ`, Line: 21, Col: 46}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/primary/web/views/admin.templ`, Line: 21, Col: 54}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 					if templ_7745c5c3_Err != nil {
