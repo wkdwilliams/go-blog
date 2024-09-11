@@ -3,6 +3,7 @@ package web
 import (
 	"context"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -10,11 +11,11 @@ import (
 )
 
 type App struct {
-	echo        *echo.Echo
-	port        int
-	startTime   time.Time
-	userService services.IUserService
-	postService services.IPostService
+	echo        *echo.Echo            // The router
+	port        int                   // The port to listen on
+	startTime   time.Time             // The time of which the server started
+	userService services.IUserService // User service
+	postService services.IPostService // Post service
 }
 
 func NewApp(userService services.IUserService, postService services.IPostService, opts ...AppOption) *App {
@@ -42,6 +43,7 @@ func (a *App) Start() error {
 }
 
 func (a App) Stop(ctx context.Context) error {
+	log.Printf("Shutting down after %v of up time", a.Uptime())
 	return a.echo.Shutdown(ctx)
 }
 

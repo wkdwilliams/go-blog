@@ -2,8 +2,6 @@ package web
 
 import (
 	"errors"
-	"fmt"
-	"reflect"
 
 	"github.com/a-h/templ"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
@@ -17,8 +15,6 @@ func ErrorHandler(err error, c echo.Context) {
 	var view templ.Component
 
 	log.Error(err)
-
-	fmt.Println(reflect.TypeOf(err))
 
 	if errors.Is(err, echo.ErrNotFound) {
 		view = views.NotFound()
