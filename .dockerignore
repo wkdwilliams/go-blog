@@ -3,4 +3,6 @@ README.md
 .gitignore
 tmp
 .air.toml
-gopher.jpeg
+.env.example
+.github
+bin

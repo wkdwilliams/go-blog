@@ -28,13 +28,19 @@ func NewUserService(ur ports.UserRepository) *UserService {
 }
 
 func (s *UserService) CreateAccount(username, password, name string) (*models.User, error) {
-	user, err := models.NewUser(username, password, name)
+	hash, err := hashing.HashPassword(password)
 
 	if err != nil {
 		return nil, err
 	}
 
-	if err := s.userRepository.Add(user); err != nil {
+	user := models.NewUser(username, hash, name)
+
+	if err := user.Validate(); err != nil {
+		return nil, err
+	}
+
+	if err := s.userRepository.Create(user); err != nil {
 		return nil, fmt.Errorf("failed to add a user: %w", err)
 	}
 

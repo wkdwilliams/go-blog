@@ -8,3 +8,9 @@ func WithPort(port int) AppOption {
 		a.port = port
 	}
 }
+
+func WithHideBanner() AppOption {
+	return func(a *App) {
+		a.echo.HideBanner = true
+	}
+}

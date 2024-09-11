@@ -17,7 +17,7 @@ func NewPostRepository(db *gorm.DB) *PostRepository {
 	return &PostRepository{db}
 }
 
-func (ur *PostRepository) Add(u models.Post) error {
+func (ur *PostRepository) Create(u *models.Post) error {
 	return ur.db.Save(u).Error
 }
 

@@ -17,7 +17,7 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 	return &UserRepository{db}
 }
 
-func (ur *UserRepository) Add(u *models.User) error {
+func (ur *UserRepository) Create(u *models.User) error {
 	return ur.db.Save(u).Error
 }
 

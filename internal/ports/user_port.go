@@ -6,7 +6,7 @@ import (
 )
 
 type UserRepository interface {
-	Add(u *models.User) error
+	Create(u *models.User) error
 	GetById(id uuid.UUID) (*models.User, error)
 	GetAll() ([]models.User, error)
 	GetByUsername(username string) (*models.User, error)
