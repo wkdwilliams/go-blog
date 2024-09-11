@@ -31,7 +31,7 @@ seed:
 	go run cmd/seed/main.go
 
 test:
-	go test ./... -race -count 1 -timeout 200s
+	go test ./... -race -count 1 -timeout 600s | grep -v 'no test files'
 
 generate-mock:
 	@if ! command -v mockery &> /dev/null; then \

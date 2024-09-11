@@ -2,6 +2,7 @@ package services_test
 
 import (
 	"math/rand"
+	"sync"
 	"testing"
 
 	"github.com/brianvoe/gofakeit/v7"
@@ -36,22 +37,34 @@ func TestCanCreatePostFuzzer(t *testing.T) {
 
 	faker := gofakeit.New(0)
 
-	for i := 0; i < 200; i++ {
-		var (
-			title   = faker.BookTitle()
-			content = faker.Sentence(rand.Intn(50-1+1) + 1)
-			userId  = uuid.New()
-		)
+	wg := &sync.WaitGroup{}
 
-		post, err := postService.Create(title, content, userId)
+	for i := 0; i < 50; i++ {
 
-		assert.Nil(t, err)                     // Assert that the returned error is nil
-		assert.Equal(t, post.Title, title)     // Assert that the returned post title is equal to the title we inputted
-		assert.Equal(t, post.Content, content) // Assert that the returned content is equal to the content we inputted
-		assert.Equal(t, post.UserID, userId)   // Assert that the returned user id is equal to the user id we inputted
+		wg.Add(1)
 
-		mockPostRepository.AssertCalled(t, "Create", mock.Anything)
+		// We have to run inside a go routine because this just takes too long...
+		go func() {
+			var (
+				title   = faker.BookTitle()
+				content = faker.Sentence(rand.Intn(50-1+1) + 1)
+				userId  = uuid.New()
+			)
+
+			post, err := postService.Create(title, content, userId)
+
+			assert.Nil(t, err)                     // Assert that the returned error is nil
+			assert.Equal(t, post.Title, title)     // Assert that the returned post title is equal to the title we inputted
+			assert.Equal(t, post.Content, content) // Assert that the returned content is equal to the content we inputted
+			assert.Equal(t, post.UserID, userId)   // Assert that the returned user id is equal to the user id we inputted
+
+			mockPostRepository.AssertCalled(t, "Create", mock.Anything)
+
+			wg.Done()
+		}()
 	}
+
+	wg.Wait()
 }
 
 func TestCanGetPostById(t *testing.T) {

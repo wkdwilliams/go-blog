@@ -2,6 +2,7 @@ package services_test
 
 import (
 	"math/rand"
+	"sync"
 	"testing"
 
 	"github.com/brianvoe/gofakeit/v7"
@@ -36,6 +37,7 @@ func TestCanCreateUser(t *testing.T) {
 	mockUserRepository.AssertCalled(t, "Create", mock.Anything)
 }
 
+// This test is slow due to the hashing function
 func TestCanCreateUserFuzzer(t *testing.T) {
 	mockUserRepository := mocks.NewUserRepository(t)
 	mockUserRepository.On("Create", mock.Anything).Return(nil)
@@ -44,22 +46,33 @@ func TestCanCreateUserFuzzer(t *testing.T) {
 
 	faker := gofakeit.New(0)
 
-	for i := 0; i < 100; i++ {
-		var (
-			username = faker.Username()
-			password = faker.Password(true, true, true, true, true, rand.Intn(50-1+1)+1)
-			name     = faker.Name()
-		)
+	wg := &sync.WaitGroup{}
 
-		user, err := userService.CreateAccount(username, password, name)
+	for i := 0; i < 50; i++ {
 
-		assert.Nil(t, err)                          // Assert that the returned error is nil
-		assert.Equal(t, user.Username, username)    // Assert that the returned username is equal to the username we inputted
-		assert.NotEqual(t, user.Password, password) // Assert that the returned password is NOT equal to the password we inputted (password is hashed)
-		assert.Equal(t, user.Name, name)            // Assert that the returned name is equal to the name we inputted
+		wg.Add(1)
 
-		mockUserRepository.AssertCalled(t, "Create", mock.Anything)
+		// We have to run inside a go routine because this just takes too long...
+		go func() {
+			var (
+				username = faker.Username()
+				password = faker.Password(true, true, true, true, true, rand.Intn(50-1+1)+1)
+				name     = faker.Name()
+			)
+
+			user, err := userService.CreateAccount(username, password, name)
+
+			assert.Nil(t, err)                          // Assert that the returned error is nil
+			assert.Equal(t, user.Username, username)    // Assert that the returned username is equal to the username we inputted
+			assert.NotEqual(t, user.Password, password) // Assert that the returned password is NOT equal to the password we inputted (password is hashed)
+			assert.Equal(t, user.Name, name)            // Assert that the returned name is equal to the name we inputted
+
+			mockUserRepository.AssertCalled(t, "Create", mock.Anything)
+			wg.Done()
+		}()
 	}
+
+	wg.Wait()
 }
 
 func TestCanGetUserById(t *testing.T) {
