@@ -1,52 +1,71 @@
 package database
 
 import (
-	"errors"
+	"sort"
 	"sync"
 
 	"github.com/google/uuid"
 	"github.com/wkdwilliams/go-blog/internal/domain/models"
+	"github.com/wkdwilliams/go-blog/internal/ports"
 )
 
 type MemoryPostRepository struct {
+	posts map[uuid.UUID]*models.Post
 	mu    sync.RWMutex
-	posts map[uuid.UUID]models.Post
 }
 
 func NewMemoryPostRepository() *MemoryPostRepository {
 	return &MemoryPostRepository{
-		posts: make(map[uuid.UUID]models.Post),
+		posts: make(map[uuid.UUID]*models.Post),
 	}
 }
 
-func (ur *MemoryPostRepository) Add(post models.Post) error {
-	ur.mu.Lock()
-	defer ur.mu.Unlock()
+func (pr *MemoryPostRepository) Add(p models.Post) error {
+	pr.mu.Lock()
+	defer pr.mu.Unlock()
 
-	ur.posts[post.ID] = post
+	// If the post ID is not set, generate a new one
+	if p.ID == uuid.Nil {
+		p.ID = uuid.New()
+	}
+	pr.posts[p.ID] = &p
 	return nil
 }
 
-func (ur *MemoryPostRepository) GetById(id uuid.UUID) (*models.Post, error) {
-	ur.mu.RLock()
-	defer ur.mu.RUnlock()
+func (pr *MemoryPostRepository) GetById(id uuid.UUID) (*models.Post, error) {
+	pr.mu.RLock()
+	defer pr.mu.RUnlock()
 
-	post, exists := ur.posts[id]
+	post, exists := pr.posts[id]
 	if !exists {
-		return nil, errors.New("post not found")
+		return nil, ports.ErrRecordNotFound
 	}
-
-	return &post, nil
+	return post, nil
 }
 
-func (ur *MemoryPostRepository) GetAll() ([]models.Post, error) {
-	ur.mu.RLock()
-	defer ur.mu.RUnlock()
+func (pr *MemoryPostRepository) GetAll() ([]models.Post, error) {
+	pr.mu.RLock()
+	defer pr.mu.RUnlock()
 
-	posts := make([]models.Post, 0, len(ur.posts))
-	for _, post := range ur.posts {
-		posts = append(posts, post)
+	posts := make([]models.Post, 0, len(pr.posts))
+	for _, post := range pr.posts {
+		posts = append(posts, *post)
 	}
 
+	sort.Slice(posts, func(i, j int) bool {
+		return posts[i].CreatedAt.After(posts[j].CreatedAt)
+	})
+
 	return posts, nil
+}
+
+func (pr *MemoryPostRepository) Delete(id uuid.UUID) error {
+	pr.mu.Lock()
+	defer pr.mu.Unlock()
+
+	if _, exists := pr.posts[id]; !exists {
+		return ports.ErrRecordNotFound
+	}
+	delete(pr.posts, id)
+	return nil
 }
