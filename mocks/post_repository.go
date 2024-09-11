@@ -110,17 +110,17 @@ func (_m *PostRepository) GetById(id uuid.UUID) (*models.Post, error) {
 	return r0, r1
 }
 
-// UpdateTitleAndContent provides a mock function with given fields: id, title, content
-func (_m *PostRepository) UpdateTitleAndContent(id uuid.UUID, title string, content string) error {
-	ret := _m.Called(id, title, content)
+// Update provides a mock function with given fields: p
+func (_m *PostRepository) Update(p *models.Post) error {
+	ret := _m.Called(p)
 
 	if len(ret) == 0 {
-		panic("no return value specified for UpdateTitleAndContent")
+		panic("no return value specified for Update")
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(uuid.UUID, string, string) error); ok {
-		r0 = rf(id, title, content)
+	if rf, ok := ret.Get(0).(func(*models.Post) error); ok {
+		r0 = rf(p)
 	} else {
 		r0 = ret.Error(0)
 	}

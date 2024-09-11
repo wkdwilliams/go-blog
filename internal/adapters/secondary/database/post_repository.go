@@ -48,11 +48,6 @@ func (ur *PostRepository) Delete(id uuid.UUID) error {
 	return ur.db.Where("id = ?", id).Delete(&models.Post{}).Error
 }
 
-func (ur *PostRepository) UpdateTitleAndContent(id uuid.UUID, title, content string) error {
-	return ur.db.
-		Model(&models.Post{}).
-		Where("id = ?", id.String()).
-		Update("title", title).
-		Update("content", content).
-		Error
+func (ur *PostRepository) Update(p *models.Post) error {
+	return ur.db.Model(&models.Post{ID: p.ID}).Updates(p).Error
 }

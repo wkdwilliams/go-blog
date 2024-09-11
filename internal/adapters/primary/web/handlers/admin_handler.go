@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 
 	validation "github.com/go-ozzo/ozzo-validation/v4"
@@ -66,6 +67,7 @@ func AdminPostDeleteHandler(postService services.IPostService) echo.HandlerFunc 
 		}
 
 		if err := postService.Delete(id); err != nil {
+			fmt.Println("deleting failed")
 			return err
 		}
 
@@ -105,13 +107,9 @@ func AdminPostTryEditHandler(postService services.IPostService) echo.HandlerFunc
 			return err
 		}
 
-		post, err := postService.GetById(id)
+		post, err := postService.UpdateTitleAndContent(id, editPostRequest.Title, editPostRequest.Content)
 
 		if err != nil {
-			return err
-		}
-
-		if err := postService.UpdateTitleAndContent(id, editPostRequest.Title, editPostRequest.Content); err != nil {
 			return err
 		}
 
