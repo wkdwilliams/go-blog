@@ -3,6 +3,7 @@ package views
 import (
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/wkdwilliams/go-blog/internal/adapters/primary/web/views/layout"
+	"github.com/wkdwilliams/go-blog/internal/domain/models"
 )
 
 css postCreatedText() {
@@ -28,7 +29,7 @@ templ Admin(postCreated bool, validationErrors error) {
 				}
 				<div class="form-group">
 					<label for="title">Post Title</label>
-					<input type="text" id="title" name="title" placeholder="Enter your blog post title" required/>
+					<input type="text" id="title" name="title" placeholder="Enter your blog post title" required />
 				</div>
 				<div class="form-group">
 					<label for="content">Post Content</label>
@@ -41,6 +42,46 @@ templ Admin(postCreated bool, validationErrors error) {
 const a = 1;
 </code></pre>"
 					></textarea>
+					<p class="helper-text">You can use HTML tags for formatting your content.</p>
+				</div>
+				<div class="form-group">
+					<button type="submit">Publish Post</button>
+				</div>
+			</form>
+		</div>
+	}
+}
+
+templ AdminPostEdit(postEdit bool, validationErrors error, post *models.Post) {
+	@layout.Base() {
+		<div class="form-container">
+			<h1>Edit Blog Post</h1>
+			if validationErrors != nil {
+				<ul>
+					for i, v := range validationErrors.(validation.Errors) {
+						<li class="validation-error">{ i } - { v.Error() }</li>
+					}
+				</ul>
+			}
+			<form action={templ.SafeURL("/admin/post/edit/"+post.ID.String())} method="POST">
+				if postEdit {
+					<p class={ postCreatedText() }>Post Edit</p>
+				}
+				<div class="form-group">
+					<label for="title">Post Title</label>
+					<input type="text" id="title" name="title" placeholder="Enter your blog post title" value={post.Title} required />
+				</div>
+				<div class="form-group">
+					<label for="content">Post Content</label>
+					<textarea
+						required
+						id="content"
+						name="content"
+						placeholder="I just created some new cool code in JavaScript:
+<pre><code class='language-javascript'>
+const a = 1;
+</code></pre>"
+					>{ post.Content }</textarea>
 					<p class="helper-text">You can use HTML tags for formatting your content.</p>
 				</div>
 				<div class="form-group">

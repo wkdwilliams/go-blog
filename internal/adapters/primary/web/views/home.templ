@@ -22,7 +22,7 @@ templ Home(posts []models.Post) {
 					<div class="col-md-6 blog-post">
 						<h2>{ v.Title }</h2>
 						if context_helper.UserIsLoggedInFromContext(ctx) {
-							<p class="blog-post-meta">{ v.CreatedAt.Format("January 2, 2006") } by <a href="#">{ v.User.Name }</a> | <a onclick="deletePost(event)" href={ templ.URL("/admin/post/delete/" + v.ID.String()) }>Delete</a></p>
+							<p class="blog-post-meta">{ v.CreatedAt.Format("January 2, 2006") } by <a href="#">{ v.User.Name }</a> | <a onclick="deletePost(event)" href={ templ.SafeURL("/admin/post/delete/" + v.ID.String()) }>Delete</a> | <a href={ templ.SafeURL("/admin/post/edit/" + v.ID.String()) }>Edit</a></p>
 						} else {
 							<p class="blog-post-meta">{ v.CreatedAt.Format("January 2, 2006") } by <a href="#">{ v.User.Name }</a></p>
 						}

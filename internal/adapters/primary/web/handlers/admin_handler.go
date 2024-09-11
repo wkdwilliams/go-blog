@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/go-ozzo/ozzo-validation/v4"
+	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/google/uuid"
 	"github.com/gorilla/sessions"
 	"github.com/labstack/echo-contrib/session"
@@ -70,6 +70,52 @@ func AdminPostDeleteHandler(postService services.IPostService) echo.HandlerFunc 
 		}
 
 		return c.Redirect(http.StatusTemporaryRedirect, c.Echo().Reverse("index"))
+	}
+}
+
+func AdminPostEditHandler(postService services.IPostService) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		id, err := uuid.Parse(c.Param("id"))
+
+		if err != nil {
+			return err
+		}
+
+		post, err := postService.GetById(id)
+
+		if err != nil {
+			return err
+		}
+
+		return views.AdminPostEdit(false, nil, post).Render(c.Request().Context(), c.Response().Writer)
+	}
+}
+
+func AdminPostTryEditHandler(postService services.IPostService) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		id, err := uuid.Parse(c.Param("id"))
+
+		if err != nil {
+			return err
+		}
+
+		var editPostRequest createPostRequest
+
+		if err := c.Bind(&editPostRequest); err != nil {
+			return err
+		}
+
+		post, err := postService.GetById(id)
+
+		if err != nil {
+			return err
+		}
+
+		if err := postService.UpdateTitleAndContent(id, editPostRequest.Title, editPostRequest.Content); err != nil {
+			return err
+		}
+
+		return views.AdminPostEdit(true, nil, post).Render(c.Request().Context(), c.Response().Writer)
 	}
 }
 

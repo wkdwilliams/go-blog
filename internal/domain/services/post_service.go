@@ -11,6 +11,7 @@ type IPostService interface {
 	GetById(id uuid.UUID) (*models.Post, error)
 	GetAll() ([]models.Post, error)
 	Delete(id uuid.UUID) error
+	UpdateTitleAndContent(id uuid.UUID, title, content string) error
 }
 
 type PostService struct {
@@ -45,4 +46,8 @@ func (s *PostService) GetAll() ([]models.Post, error) {
 
 func (s *PostService) Delete(id uuid.UUID) error {
 	return s.postRepository.Delete(id)
+}
+
+func (s *PostService) UpdateTitleAndContent(id uuid.UUID, title, content string) error {
+	return s.postRepository.UpdateTitleAndContent(id, title, content)
 }

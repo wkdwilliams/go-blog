@@ -11,4 +11,5 @@ type PostRepository interface {
 	GetById(id uuid.UUID) (*models.Post, error)
 	GetAll() ([]models.Post, error)
 	Delete(id uuid.UUID) error
+	UpdateTitleAndContent(id uuid.UUID, title, content string) error
 }

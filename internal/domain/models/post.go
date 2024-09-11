@@ -23,7 +23,7 @@ func (p Post) Validate() error {
 	return validation.ValidateStruct(&p,
 		validation.Field(&p.ID, validation.Required, is.UUID),
 		validation.Field(&p.UserID, validation.Required, is.UUID),
-		validation.Field(&p.Title, validation.Required, validation.Length(5, 50)),
+		validation.Field(&p.Title, validation.Required, validation.Length(1, 50)),
 		validation.Field(&p.Content, validation.Required, validation.Length(1, 10000)),
 		validation.Field(&p.CreatedAt, validation.Required),
 		validation.Field(&p.UpdatedAt, validation.Required),
