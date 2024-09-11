@@ -52,7 +52,7 @@ func main() {
 
 	// Wait for interrupt signal to gracefully shutdown the server with a timeout of 10 seconds.
 	<-ctx.Done()
-	
+
 	if err := srv.Stop(context.Background()); err != nil {
 		log.Fatal(err)
 	}

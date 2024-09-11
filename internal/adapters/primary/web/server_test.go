@@ -2,23 +2,29 @@ package web_test
 
 import (
 	"context"
+	"sync"
 	"testing"
 	"time"
 
 	"github.com/wkdwilliams/go-blog/internal/adapters/primary/web"
 	"github.com/wkdwilliams/go-blog/internal/adapters/secondary/database"
 	"github.com/wkdwilliams/go-blog/internal/domain/services"
+	"github.com/wkdwilliams/go-blog/internal/infrastructure"
 )
 
 func TestStartAndStopServer(t *testing.T) {
+	mockDB, _ := infrastructure.NewMysqlMock()
+	
 	server := web.NewApp(
-		services.NewUserService(&database.MemoryUserRepository{}),
-		services.NewPostService(&database.MemoryPostRepository{}),
+		services.NewUserService(database.NewUserRepository(mockDB)),
+		services.NewPostService(database.NewPostRepository(mockDB)),
 		web.WithHideBanner(),
 	)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
+
+	wg := &sync.WaitGroup{}
 
 	errCh := make(chan error)
 
@@ -27,12 +33,6 @@ func TestStartAndStopServer(t *testing.T) {
 	}()
 
 	select {
-	case <-ctx.Done():
-		// If there's no error after
-		// the context has timed out,
-		// then we have no error starting
-		// the server.
-
 		// Test the shutting down of the server
 		if err := server.Stop(ctx); err != nil {
 			t.Fatalf("Error stopping the server: %v", err)

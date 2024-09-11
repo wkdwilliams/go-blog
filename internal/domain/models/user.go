@@ -3,33 +3,39 @@ package models
 import (
 	"time"
 
+	validation "github.com/go-ozzo/ozzo-validation/v4"
+	"github.com/go-ozzo/ozzo-validation/v4/is"
 	"github.com/google/uuid"
-	"github.com/wkdwilliams/go-blog/pkg/hashing"
 )
 
 type User struct {
-	ID        uuid.UUID `gorm:"type:VARCHAR(16);primary_key;"`
-	Username  string    `gorm:"index,unique"`
+	ID        uuid.UUID
+	Username  string
 	Password  string
 	Name      string
 	CreatedAt time.Time
-	UpdateAt  time.Time
-	Posts     []Post `gorm:"foreignKey:UserID"`
+	UpdatedAt time.Time
+	Posts     []Post
 }
 
-func NewUser(username, password, name string) (*User, error) {
-	hash, err := hashing.HashPassword(password)
+func (u User) Validate() error {
+	return validation.ValidateStruct(&u,
+		validation.Field(&u.ID, validation.Required, is.UUID),
+		validation.Field(&u.Username, validation.Required, validation.Length(1, 50)),
+		validation.Field(&u.Password, validation.Required),
+		validation.Field(&u.Name, validation.Required, validation.Length(1, 30)),
+		validation.Field(&u.CreatedAt, validation.Required),
+		validation.Field(&u.UpdatedAt, validation.Required),
+	)
+}
 
-	if err != nil {
-		return nil, err
-	}
-
+func NewUser(username, password, name string) *User {
 	return &User{
 		ID:        uuid.New(),
 		Username:  username,
-		Password:  hash,
+		Password:  password,
 		Name:      name,
 		CreatedAt: time.Now(),
-		UpdateAt:  time.Now(),
-	}, nil
+		UpdatedAt: time.Now(),
+	}
 }

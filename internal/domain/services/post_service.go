@@ -24,7 +24,11 @@ func NewPostService(r ports.PostRepository) *PostService {
 func (s *PostService) Create(title, content string, userId uuid.UUID) (*models.Post, error) {
 	post := models.NewPost(title, content, userId)
 
-	if err := s.postRepository.Add(post); err != nil {
+	if err := post.Validate(); err != nil {
+		return nil, err
+	}
+
+	if err := s.postRepository.Create(&post); err != nil {
 		return nil, err
 	}
 

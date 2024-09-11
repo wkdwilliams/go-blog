@@ -31,4 +31,12 @@ seed:
 	go run cmd/seed/main.go
 
 test:
-	go test ./... -race -count 1
+	go test ./... -race -count 1 -timeout 200s
+
+generate-mock:
+	@if ! command -v mockery &> /dev/null; then \
+    	echo "Please install https://vektra.github.io/mockery/latest/installation/#go-install"; \
+    	exit 1; \
+	fi
+
+	mockery

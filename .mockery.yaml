@@ -1,0 +1,14 @@
+# Automatically generate mocks for all interfaces in the project
+all: true
+recursive: true
+
+# Specify output directory if needed
+output: ./mocks
+
+# Optionally, you can specify file naming conventions
+case: underscore
+
+# Generate mocks outside the interface package
+inpackage: false
+
+dir: ./internal/ports
