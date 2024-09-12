@@ -65,7 +65,7 @@ templ AdminPostEdit(postEdit bool, validationErrors error, post *models.Post) {
 			}
 			<form action={templ.SafeURL("/admin/post/edit/"+post.ID.String())} method="POST">
 				if postEdit {
-					<p class={ postCreatedText() }>Post Edit</p>
+					<p class={ postCreatedText() }>Post Edited</p>
 				}
 				<div class="form-group">
 					<label for="title">Post Title</label>

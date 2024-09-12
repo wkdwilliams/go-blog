@@ -252,7 +252,7 @@ func AdminPostEdit(postEdit bool, validationErrors error, post *models.Post) tem
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\">Post Edit</p>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\">Post Edited</p>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

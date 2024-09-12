@@ -5,7 +5,6 @@ import (
 	"github.com/wkdwilliams/go-blog/internal/domain/models"
 )
 
-//go:generate mockery --name PostRepository
 type PostRepository interface {
 	Create(u *models.Post) error
 	GetById(id uuid.UUID) (*models.Post, error)

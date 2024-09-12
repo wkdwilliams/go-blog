@@ -49,5 +49,5 @@ func (ur *PostRepository) Delete(id uuid.UUID) error {
 }
 
 func (ur *PostRepository) Update(p *models.Post) error {
-	return ur.db.Model(&models.Post{ID: p.ID}).Updates(p).Error
+	return ur.db.Model(p).Updates(p).Error
 }
