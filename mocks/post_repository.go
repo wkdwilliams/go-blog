@@ -110,6 +110,24 @@ func (_m *PostRepository) GetById(id uuid.UUID) (*models.Post, error) {
 	return r0, r1
 }
 
+// Update provides a mock function with given fields: p
+func (_m *PostRepository) Update(p *models.Post) error {
+	ret := _m.Called(p)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Update")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(*models.Post) error); ok {
+		r0 = rf(p)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // NewPostRepository creates a new instance of PostRepository. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewPostRepository(t interface {

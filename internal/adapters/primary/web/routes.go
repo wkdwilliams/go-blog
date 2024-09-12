@@ -43,6 +43,12 @@ func (a *App) initAppRoutes() {
 			// Handle the post create request
 			admin.POST("/post", handlers.AdminPostCreateHandler(a.postService)).Name = "admin-post"
 
+			// Handle the edit post
+			admin.GET("/post/edit/:id", handlers.AdminPostEditHandler(a.postService)).Name = "admin-post-edit"
+
+			// Handle the try edit post request
+			admin.POST("/post/edit/:id", handlers.AdminPostTryEditHandler(a.postService)).Name = "admin-post-try-edit"
+
 			// Handle the post delete request
 			admin.GET("/post/delete/:id", handlers.AdminPostDeleteHandler(a.postService)).Name = "admin-post-delete"
 
