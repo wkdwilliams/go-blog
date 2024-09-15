@@ -1,0 +1,20 @@
+package views
+
+import "github.com/wkdwilliams/go-blog/internal/adapters/primary/web/views/layout"
+
+templ InstallPage() {
+	@layout.Base() {
+		<div class="install-container">
+			<h2>Create Account</h2>
+			<form action="/install" method="POST">
+				<label for="username">Username</label>
+				<input type="text" id="username" name="username" placeholder="Enter your username" required/>
+				<label for="password">Password</label>
+				<input type="password" id="password" name="password" placeholder="Enter your password" required/>
+				<label for="password">Name</label>
+				<input type="password" id="name" name="name" placeholder="Enter your name" required/>
+				<input type="submit" value="Create"/>
+			</form>
+		</div>
+	}
+}

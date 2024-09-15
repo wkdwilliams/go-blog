@@ -11,10 +11,6 @@ import (
 	"github.com/wkdwilliams/go-blog/internal/domain/services"
 )
 
-type userKeyType string
-
-const userKey userKeyType = "user" // The IDE complains if we don't do this
-
 func AuthenticatedUser(userService services.IUserService) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
@@ -24,26 +20,37 @@ func AuthenticatedUser(userService services.IUserService) echo.MiddlewareFunc {
 				return err
 			}
 
-			_userId := sess.Values["user_id"]
-			if _userId == nil {
-				log.Error("failed getting user id from session in auth middleware")
+			_userId, ok := sess.Values["user_id"]
+			if _userId == nil || !ok {
 				return next(c)
 			}
 
 			userId, err := uuid.Parse(_userId.(string))
 			if err != nil {
-				log.Error("failed parsing the uuid in auth middleware")
+				// If we have an error, there is a problem with the cookie.
+				// Logout the user
+				sess.Options.MaxAge = -1
+				err = sess.Save(c.Request(), c.Response().Writer)
+				if err != nil {
+					return err
+				}
 				return next(c)
 			}
 
 			user, err := userService.GetById(userId)
 			if err != nil {
-				log.Error("failed getting the user from service in auth middleware")
+				// If we have an error, there is a problem with the cookie.
+				// Logout the user
+				sess.Options.MaxAge = -1
+				err = sess.Save(c.Request(), c.Response().Writer)
+				if err != nil {
+					return err
+				}
 				return next(c)
 			}
 
 			c.SetRequest(c.Request().WithContext(
-				context.WithValue(c.Request().Context(), userKey, user),
+				context.WithValue(c.Request().Context(), "user", user),
 			))
 
 			return next(c)
