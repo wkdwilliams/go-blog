@@ -1,7 +1,5 @@
 # Go Blog
 
-![Build Status](https://github.com/wkdwilliams/go-blog/actions/workflows/delpoy.yml/badge.svg)
-
 [Live Demo](https://lewiswilliams.info/)
 
 ---
