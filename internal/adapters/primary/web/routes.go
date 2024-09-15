@@ -25,6 +25,7 @@ func (a *App) initAppRoutes() {
 		// Middleware for everything
 		main.Use(session.Middleware(sessions.NewCookieStore([]byte(os.Getenv("SECRET")))))
 		main.Use(middleware.AuthenticatedUser(a.userService))
+		main.Use(middleware.IsInstalled(a.userService))
 
 		// Health check
 		main.GET("/health", func(c echo.Context) error {
@@ -33,6 +34,12 @@ func (a *App) initAppRoutes() {
 
 		// Handle the index request e.g. http://host/
 		main.GET("", handlers.IndexHandler(a.postService)).Name = "index"
+
+		install := main.Group("/install")
+		{
+			install.GET("", handlers.HandleShowInstall).Name = "install-page"
+			install.POST("", handlers.HandleInstall(a.userService)).Name = "install"
+		}
 
 		// Group for the admin routes e.g. http://host/admin/*
 		admin := main.Group("/admin", middleware.AdminAuthorized)

@@ -138,6 +138,62 @@ code {
     text-decoration: none;
 }
 
+.install-container {
+    padding: 20px;
+    width: 40%;
+    /* max-width: 800px; */
+    min-width: 300px;
+    margin: 100px auto;
+    background: #1e1e1e;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+}
+
+.install-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.install-container label {
+    color: white;
+}
+
+.install-container input[type="text"],
+.install-container input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.install-container input[type="submit"] {
+    background-color: #bb86fc;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.install-container input[type="submit"]:hover {
+    background-color: #9b5dfc;
+}
+
+.install-container .forgot-password {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.install-container .forgot-password a {
+    color: #4caf50;
+    text-decoration: none;
+}
+
 .form-container {
     max-width: 800px;
     margin: 100px auto;
