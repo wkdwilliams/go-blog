@@ -1,13 +1,28 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
+	"math/rand"
+	"os"
 
 	"github.com/joho/godotenv"
 	"github.com/wkdwilliams/go-blog/internal/adapters/secondary/database"
+	"github.com/wkdwilliams/go-blog/internal/domain/models"
 	"github.com/wkdwilliams/go-blog/internal/domain/services"
 	"github.com/wkdwilliams/go-blog/internal/infrastructure"
 )
+
+type Post struct {
+	Title   string `json:"title"`
+	Content string `json:"content"`
+}
+
+type User struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Name     string `json:"name"`
+}
 
 func main() {
 	// Load env
@@ -26,76 +41,47 @@ func main() {
 	postRepo := database.NewPostRepository(db)
 	postService := services.NewPostService(postRepo)
 
-	user, err := usersService.CreateAccount("admin", "pass", "lewis")
+	// ##################### Seed users #####################
+
+	userFile, err := os.Open("cmd/seed/data/users.json")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	for _, v := range posts {
-		_, err = postService.Create(v[0], v[1], user.ID)
+	var users []User
+	var createdUsers []models.User
+
+	if err := json.NewDecoder(userFile).Decode(&users); err != nil {
+		log.Fatal(err)
+	}
+
+	for _, v := range users {
+		user, err := usersService.CreateAccount(v.Username, v.Password, v.Name)
 		if err != nil {
 			log.Fatal(err)
 		}
-	}
-}
 
-var posts [][]string = [][]string{
-	{
-		"Decoding a struct in Golang",
-		`<p>Decoding structs to a JSON string is easy. We can do this using go's built-in encoding package. Here is an example of creating a small HTTP server and writing the json to the response writer</p>
-        <pre><code class="language-golang">package main
-
-import (
-	"encoding/json"
-	"net/http"
-	"log"
-)
-
-// Define a simple struct
-type User struct {
-	ID    int    ` + "`json:\"id\"`" + `
-	Name  string ` + "`json:\"name\"`" + `
-	Email string ` + "`json:\"email\"`" + `
-}
-
-func main() {
-	http.HandleFunc("/user", userHandler)
-	log.Println("Server is running on http://localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
-}
-
-// Handler function to serve the User struct as JSON
-func userHandler(w http.ResponseWriter, r *http.Request) {
-	// Create an instance of User
-	user := User{
-		ID:    1,
-		Name:  "John Doe",
-		Email: "john.doe@example.com",
+		createdUsers = append(createdUsers, *user)
 	}
 
-	// Set the Content-Type header to application/json
-	w.Header().Set("Content-Type", "application/json")
+	// ##################### Seed posts #####################
 
-	// Encode the User struct to JSON and write it to the response
-	if err := json.NewEncoder(w).Encode(user); err != nil {
-		http.Error(w, "Failed to encode JSON", http.StatusInternalServerError)
-		return
+	postsFile, err := os.Open("cmd/seed/data/posts.json")
+	if err != nil {
+		log.Fatal(err)
 	}
-}
-</code></pre>`,
-	},
-	{
-		"Understanding Async/Await in JavaScript",
-		`<p>Async/await is a powerful feature in JavaScript that simplifies working with asynchronous code. Here's how it works:</p>
-        <pre><code class="language-javascript">async function fetchData() {
-    try {
-        const response = await fetch('https://api.example.com/data');
-        const data = await response.json();
-        console.log(data);
-    } catch (error) {
-        console.error('Error fetching data:', error);
-    }
-}
-</code></pre>`,
-	},
+
+	var posts []Post
+
+	if err := json.NewDecoder(postsFile).Decode(&posts); err != nil {
+		log.Fatal(err)
+	}
+
+	for _, post := range posts {
+		if len(createdUsers) == 1 {
+			postService.Create(post.Title, post.Content, createdUsers[0].ID)
+			continue
+		}
+		postService.Create(post.Title, post.Content, createdUsers[rand.Intn((len(createdUsers)-1)-0)+0].ID)
+	}
 }
