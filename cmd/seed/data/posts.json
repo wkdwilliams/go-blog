@@ -1,0 +1,10 @@
+[
+	{
+		"title": "Decoding a struct in Golang",
+		"content": "<p>Decoding structs to a JSON string is easy. We can do this using go's built-in encoding package. Here is an example of creating a small HTTP server and writing the json to the response writer</p>\n        <pre><code class=\"language-golang\">package main\n\nimport (\n\t\"encoding/json\"\n\t\"net/http\"\n\t\"log\"\n)\n\n// Define a simple struct\ntype User struct {\n\tID    int    ` + \"`json:\\\"id\\\"`\" + `\n\tName  string ` + \"`json:\\\"name\\\"`\" + `\n\tEmail string ` + \"`json:\\\"email\\\"`\" + `\n}\n\nfunc main() {\n\thttp.HandleFunc(\"/user\", userHandler)\n\tlog.Println(\"Server is running on http://localhost:8080\")\n\tlog.Fatal(http.ListenAndServe(\":8080\", nil))\n}\n\n// Handler function to serve the User struct as JSON\nfunc userHandler(w http.ResponseWriter, r *http.Request) {\n\t// Create an instance of User\n\tuser := User{\n\t\tID:    1,\n\t\tName:  \"John Doe\",\n\t\tEmail: \"john.doe@example.com\",\n\t}\n\n\t// Set the Content-Type header to application/json\n\tw.Header().Set(\"Content-Type\", \"application/json\")\n\n\t// Encode the User struct to JSON and write it to the response\n\tif err := json.NewEncoder(w).Encode(user); err != nil {\n\t\thttp.Error(w, \"Failed to encode JSON\", http.StatusInternalServerError)\n\t\treturn\n\t}\n}\n</code></pre>"
+	},
+	{
+		"title": "Understanding Async/Await in JavaScript",
+		"content": "<p>Async/await is a powerful feature in JavaScript that simplifies working with asynchronous code. Here's how it works:</p>\n        <pre><code class=\"language-javascript\">async function fetchData() {\n    try {\n        const response = await fetch('https://api.example.com/data');\n        const data = await response.json();\n        console.log(data);\n    } catch (error) {\n        console.error('Error fetching data:', error);\n    }\n}\n</code></pre>"
+	}
+]

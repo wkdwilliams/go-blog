@@ -9,14 +9,14 @@ import (
 )
 
 type Post struct {
-	ID        uuid.UUID
-	UserID    uuid.UUID
-	Title     string
-	Content   string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID        uuid.UUID `json:"id"`
+	UserID    uuid.UUID `json:"user_id"`
+	Title     string    `json:"title"`
+	Content   string    `json:"content"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 	DeletedAt *time.Time
-	User      User
+	User      User 		`json:"user"`
 }
 
 func (p Post) Validate() error {

@@ -1,4 +1,8 @@
 dev:
+	@if ! command -v air &> /dev/null; then \
+    	echo "Please install air (go install github.com/air-verse/air@latest)"; \
+    	exit 1; \
+	fi
 	air
 
 run: compile
